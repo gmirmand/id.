@@ -59,6 +59,25 @@ export default new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
+    async updateProfile({ dispatch }, user) {
+      const userId = fb.auth.currentUser.uid;
+      // update user object
+      await fb.usersCollection.doc(userId).update({
+        name: user.name,
+      });
+
+      dispatch("fetchUserProfile", { uid: userId });
+
+      // example to update all posts by user
+      // const postDocs = await fb.postsCollection
+      //   .where("userId", "==", userId)
+      //   .get();
+      // postDocs.forEach((doc) => {
+      //   fb.postsCollection.doc(doc.id).update({
+      //     userName: user.name,
+      //   });
+      // });
+    },
   },
   modules: {},
 });
