@@ -1,12 +1,8 @@
 <template>
-  <section id="settings">
-    <div class="col1">
+  <section class="d-flex flex-grow-1">
+    <div class="d-flex flex-column">
       <h3>Paramètre</h3>
       <p>Modifie ton profil bg</p>
-
-      <transition name="fade">
-        <p v-if="showSuccess" class="success">profile updated</p>
-      </transition>
 
       <validation-observer ref="observer" v-slot="{ invalid }">
         <form @submit.prevent="updateProfile">
@@ -33,24 +29,40 @@
           </v-btn>
         </form>
       </validation-observer>
+
+      <v-alert
+        :value="showSuccess"
+        dense
+        text
+        transition="scroll-x-transition"
+        type="success"
+        class="mt-4"
+      >
+        Profil mis à jour avec succès ! Bien joué bg
+      </v-alert>
     </div>
   </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { extend, setInteractionMode, ValidationObserver, ValidationProvider } from "vee-validate";
+import {
+  extend,
+  setInteractionMode,
+  ValidationObserver,
+  ValidationProvider,
+} from "vee-validate";
 
 import { email, max } from "vee-validate/dist/rules";
 
 extend("max", {
   ...max,
-  message: "{_field_} may not be greater than {length} characters"
+  message: "{_field_} a gavé trop de caractères... atta t'en a mis {length} ???",
 });
 
 extend("email", {
   ...email,
-  message: "Email invalid"
+  message: "Wesh c'est un email ça ? Fait un effort",
 });
 
 setInteractionMode("eager");
@@ -61,17 +73,17 @@ export default {
     return {
       name: "",
       email: "",
-      showSuccess: false
+      showSuccess: false,
     };
   },
   computed: {
-    ...mapState(["userProfile"])
+    ...mapState(["userProfile"]),
   },
   methods: {
     updateProfile() {
       this.$store.dispatch("updateProfile", {
         name: this.name !== "" ? this.name : this.userProfile.name,
-        email: this.email !== "" ? this.email : this.userProfile.email
+        email: this.email !== "" ? this.email : this.userProfile.email,
       });
 
       this.name = "";
@@ -82,7 +94,7 @@ export default {
       setTimeout(() => {
         this.showSuccess = false;
       }, 2000);
-    }
-  }
+    },
+  },
 };
 </script>
