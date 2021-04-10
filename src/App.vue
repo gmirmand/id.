@@ -1,8 +1,12 @@
 <template>
   <v-app>
-    <v-main>
-      <SiteNav v-if="showNav"></SiteNav>
-      <router-view />
+    <v-main class="app">
+      <v-container fill-height fluid>
+        <SiteNav v-if="showNav"></SiteNav>
+        <div class="d-flex ma-4 align-self-start flex-grow-1">
+          <router-view />
+        </div>
+      </v-container>
     </v-main>
   </v-app>
 </template>

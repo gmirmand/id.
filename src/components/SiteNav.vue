@@ -1,30 +1,60 @@
 <template>
-  <header>
-    <section>
-      <div class="col1">
-        <router-link to="/">
-          <h3>GetGet Streaming</h3>
-        </router-link>
-        <ul class="inline">
-          <li>
-            <router-link to="/">Dashboard</router-link>
-          </li>
-          <li>
-            <router-link to="/settings">Settings</router-link>
-          </li>
-          <li><a @click="logout()">logout</a></li>
-        </ul>
-      </div>
-    </section>
-  </header>
+  <v-navigation-drawer expand-on-hover permanent>
+    <v-list>
+      <v-list-item class="px-2">
+        <v-list-item-avatar>
+          <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+        </v-list-item-avatar>
+      </v-list-item>
+
+      <v-list-item link>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            {{ userProfile.name }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            {{ userProfile.email }}
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+
+    <v-divider></v-divider>
+
+    <v-list dense nav>
+      <v-list-item to="/">
+        <v-list-item-icon>
+          <v-icon>mdi-animation-play</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title> Tableau de bord</v-list-item-title>
+      </v-list-item>
+      <v-list-item link to="/settings">
+        <v-list-item-icon>
+          <v-icon>mdi-cogs</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title> Paramètres</v-list-item-title>
+      </v-list-item>
+      <v-list-item link @click="logout()">
+        <v-list-item-icon>
+          <v-icon>mdi-logout</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title> Se déconnecter</v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   methods: {
     logout() {
       this.$store.dispatch("logout");
     },
+  },
+  computed: {
+    ...mapState(["userProfile"]),
   },
 };
 </script>
