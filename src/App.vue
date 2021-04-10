@@ -14,7 +14,6 @@ export default {
   computed: {
     ...mapState(["userProfile"]),
     showNav() {
-      console.log(Object.keys(this.userProfile));
       return Object.keys(this.userProfile).length > 0;
     },
   },
