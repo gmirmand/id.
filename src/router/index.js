@@ -31,6 +31,12 @@ const routes = [
   },
 ];
 
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes,
+});
+
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((x) => x.meta.requiresAuth);
 
@@ -39,12 +45,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-});
-
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes,
 });
 
 export default router;
