@@ -1,9 +1,12 @@
 <template>
-  <div id="app">
-    <SiteNav v-if="showNav"></SiteNav>
-    <router-view />
-  </div>
+  <v-app>
+    <v-main>
+      <SiteNav v-if="showNav"></SiteNav>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
+
 <script>
 import SiteNav from "./components/SiteNav";
 
