@@ -1,9 +1,9 @@
 <template>
   <div id="login">
-    <!--    <PasswordReset-->
-    <!--      v-if="showPasswordReset"-->
-    <!--      @close="togglePasswordReset()"-->
-    <!--    ></PasswordReset>-->
+    <PasswordReset
+      v-if="showPasswordReset"
+      @close="togglePasswordReset()"
+    ></PasswordReset>
     <section>
       <div class="col1">
         <h1>G(et)G(et) Streaming</h1>
@@ -76,10 +76,12 @@
 </template>
 
 <script>
-// import PasswordReset from "@/components/PasswordReset";
+import PasswordReset from "@/components/PasswordReset";
 
 export default {
-  components: {},
+  components: {
+    PasswordReset,
+  },
   data() {
     return {
       loginForm: {
