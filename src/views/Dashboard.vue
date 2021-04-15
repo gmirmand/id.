@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard">
+  <div v-if="userProfile" id="dashboard">
     <section>
       <div class="col1">
         <div class="profile">

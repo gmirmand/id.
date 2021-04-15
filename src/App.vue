@@ -1,12 +1,13 @@
 <template>
   <v-app>
     <v-main class="app">
-      <v-container fill-height fluid>
-        <SiteNav v-if="showNav"></SiteNav>
-        <div class="d-flex ma-4 align-self-start flex-grow-1">
-          <router-view />
-        </div>
-      </v-container>
+      <v-app-bar color="yellow darken-1 font-weight-bold">
+        <v-toolbar-title> GetGet Streaming </v-toolbar-title>
+      </v-app-bar>
+      <SiteNav v-if="showNav"></SiteNav>
+      <div class="d-flex ma-4 align-self-start flex-grow-1">
+        <router-view />
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -21,7 +22,7 @@ export default {
   computed: {
     ...mapState(["userProfile"]),
     showNav() {
-      return Object.keys(this.userProfile).length > 0;
+      return this.userProfile && Object.keys(this.userProfile).length > 0;
     },
   },
 };

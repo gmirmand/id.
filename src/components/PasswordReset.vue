@@ -1,31 +1,52 @@
 <template>
-  <div class="modal">
-    <div class="modal-content">
-      <div @click="$emit('close')" class="close">close</div>
-      <h3>Reset Password</h3>
-      <div v-if="!showSuccess">
-        <p>Enter your email to reset your password</p>
-        <form @submit.prevent>
-          <input
-            v-model.trim="email"
-            type="email"
+  <v-dialog v-model="dialog" persistent max-width="600px">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn text color="primary" v-bind="attrs" v-on="on">
+        J'ai perdu mon mot de passe
+      </v-btn>
+    </template>
+    <v-card>
+      <v-card-title>
+        <span class="headline">Réinialiser ton mot de passe</span>
+      </v-card-title>
+      <v-card-text>
+        <validation-provider
+          v-slot="{ errors }"
+          name="email"
+          rules="required|email"
+        >
+          <v-text-field
+            v-model="email"
+            :error-messages="errors"
+            label="E-mail"
             placeholder="you@email.com"
-          />
-        </form>
-        <p v-if="errorMsg !== ''" class="error">{{ errorMsg }}</p>
-        <button @click="resetPassword()" class="button">Reset</button>
-      </div>
-      <p v-else>Success! Check your email for a reset link.</p>
-    </div>
-  </div>
+            required
+            autocomplete="username"
+          ></v-text-field>
+        </validation-provider>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="dialog = false">
+          Fermer
+        </v-btn>
+        <v-btn color="blue darken-1" dark @click="resetPassword">
+          Envoyer
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import { auth } from "@/firebase";
+import veeValidate from "@/mixins/veeValidate";
 
 export default {
+  mixins: [veeValidate],
   data() {
     return {
+      dialog: false,
       email: "",
       showSuccess: false,
       errorMsg: "",
@@ -37,7 +58,7 @@ export default {
 
       try {
         await auth.sendPasswordResetEmail(this.email);
-        this.showSuccess = true;
+        this.dialog = false;
       } catch (err) {
         this.errorMsg = err.message;
       }

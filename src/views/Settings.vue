@@ -57,7 +57,8 @@ import { email, max } from "vee-validate/dist/rules";
 
 extend("max", {
   ...max,
-  message: "{_field_} a gavé trop de caractères... atta t'en a mis {length} ???",
+  message:
+    "{_field_} a gavé trop de caractères... atta t'en a mis {length} ???",
 });
 
 extend("email", {
