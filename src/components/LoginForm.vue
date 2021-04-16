@@ -43,8 +43,13 @@
         </validation-provider>
       </v-row>
       <v-row justify="center">
-        <v-btn type="submit" :disabled="invalid" class="button"
-          >Connexion
+        <v-btn
+          :loading="loginLoading"
+          type="submit"
+          :disabled="invalid || loginLoading"
+          class="button"
+        >
+          Connexion
         </v-btn>
       </v-row>
       <v-row justify="center" class="mb-8">
@@ -63,6 +68,7 @@
 <script>
 import veeValidate from "@/mixins/veeValidate";
 import PasswordReset from "@/components/PasswordReset";
+import { mapState } from "vuex";
 
 export default {
   name: "LoginForm",
@@ -74,6 +80,9 @@ export default {
       password: "",
     };
   },
+  computed: mapState({
+    loginLoading: (state) => state.loginLoading,
+  }),
   methods: {
     login() {
       this.$store.dispatch("login", {

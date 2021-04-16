@@ -76,7 +76,12 @@
       </ValidationProvider>
     </v-row>
     <v-row justify="center">
-      <v-btn color="primary" :disabled="invalid" class="mb-8">
+      <v-btn
+        :loading="signupLoading"
+        color="primary"
+        :disabled="invalid || signupLoading"
+        class="mb-8"
+      >
         Créé mon compte !
       </v-btn>
     </v-row>
@@ -89,6 +94,7 @@
 
 <script>
 import veeValidate from "@/mixins/veeValidate";
+import { mapState } from "vuex";
 
 export default {
   name: "RegisterForm",
@@ -101,6 +107,9 @@ export default {
       passwordConfirm: "",
     };
   },
+  computed: mapState({
+    signupLoading: (state) => state.signupLoading,
+  }),
   methods: {
     signup() {
       this.$store.dispatch("signup", {

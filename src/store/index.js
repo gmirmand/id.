@@ -8,19 +8,29 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     userProfile: {},
+    loginLoading: false,
+    signupLoading: false,
   },
   mutations: {
     setUserProfile(state, val) {
       state.userProfile = val;
     },
+    setLoginLoading(state, val) {
+      state.loginLoading = val;
+    },
+    setSignupLoading(state, val) {
+      state.signupLoading = val;
+    },
   },
   actions: {
-    async login({ dispatch }, form) {
+    async login({ dispatch, commit }, form) {
       // sign user in
+      commit("setLoginLoading", true);
       const { user } = await fb.auth.signInWithEmailAndPassword(
         form.email,
         form.password
       );
+      commit("setLoginLoading", false);
 
       // fetch user profile and set in state
       dispatch("fetchUserProfile", user);
@@ -37,12 +47,14 @@ export default new Vuex.Store({
         router.push("/");
       }
     },
-    async signup({ dispatch }, form) {
+    async signup({ dispatch, commit }, form) {
       // sign user up
+      commit("setLoginLoading", true);
       const { user } = await fb.auth.createUserWithEmailAndPassword(
         form.email,
         form.password
       );
+      commit("setLoginLoading", false);
 
       // create user profile object in userCollections
       await fb.usersCollection.doc(user.uid).set({
