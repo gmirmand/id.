@@ -1,6 +1,6 @@
 <template>
   <v-app-bar ligth class="flex-grow-0">
-    <v-container fluid class="d-flex justify-space-between">
+    <v-container fluid class="d-flex justify-space-between align-center">
       <v-app-bar-nav-icon @click="toggle"></v-app-bar-nav-icon>
       <router-link to="/">
         <v-toolbar-title>

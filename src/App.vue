@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <v-main class="app">
-      <Navigation :drawer="drawer" @close="drawer = !drawer" />
       <TopBar @toggle="drawer = !drawer" />
+      <Navigation :drawer="drawer" @close="drawer = !drawer" />
       <v-container fluid class="pa-0 app__container d-flex flex-column">
         <v-container>
           <router-view />
