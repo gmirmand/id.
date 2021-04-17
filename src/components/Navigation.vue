@@ -2,7 +2,7 @@
   <v-navigation-drawer :value="drawer" @input="toggle" absolute temporary>
     <v-list>
       <v-list-item>
-        <!--        <UserAvatar />-->
+        <UserAvatar v-if="drawer" />
       </v-list-item>
 
       <v-list-item link>
