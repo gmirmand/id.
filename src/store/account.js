@@ -8,7 +8,7 @@ Vue.use(Vuex);
 const account = {
   namespaced: true,
   state: {
-    userProfile: {},
+    userProfile: null,
     loginLoading: false,
     signupLoading: false,
     updateProfilLoading: false,
@@ -74,7 +74,7 @@ const account = {
       await fb.auth.signOut();
 
       // clear userProfile and redirect to /login
-      commit("setUserProfile", {});
+      commit("setUserProfile", null);
       router.push("/login");
     },
     async updateProfile({ dispatch, commit }, user) {

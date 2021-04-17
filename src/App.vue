@@ -2,7 +2,11 @@
   <v-app>
     <v-main class="app">
       <TopBar @toggle="drawer = !drawer" />
-      <Navigation :drawer="drawer" @close="drawer = !drawer" />
+      <Navigation
+        v-if="userProfile"
+        :drawer="drawer"
+        @close="drawer = !drawer"
+      />
       <v-container fluid class="pa-0 app__container d-flex flex-column">
         <v-container>
           <router-view />
@@ -27,7 +31,7 @@ export default {
   },
   components: { Alerts, TopBar, Navigation },
   computed: {
-    ...mapState(["userProfile"]),
+    ...mapState("account", ["userProfile"]),
   },
 };
 </script>

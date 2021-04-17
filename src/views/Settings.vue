@@ -8,7 +8,11 @@
         <AvatarEditor />
       </div>
 
-      <validation-observer ref="observer" v-slot="{ invalid }">
+      <validation-observer
+        ref="observer"
+        v-slot="{ invalid }"
+        v-if="userProfile"
+      >
         <v-form
           @submit.prevent="updateProfile"
           class="d-flex justify-center flex-column"
@@ -40,6 +44,7 @@
           </v-btn>
         </v-form>
       </validation-observer>
+      <Loading v-else />
     </div>
   </section>
 </template>
@@ -55,11 +60,13 @@ import veeValidate from "@/mixins/veeValidate";
 
 import UserAvatar from "@/components/Avatar/UserAvatar";
 import AvatarEditor from "@/components/Avatar/AvatarEditor";
+import Loading from "../components/Loading";
 
 setInteractionMode("eager");
 
 export default {
   components: {
+    Loading,
     AvatarEditor,
     ValidationObserver,
     ValidationProvider,

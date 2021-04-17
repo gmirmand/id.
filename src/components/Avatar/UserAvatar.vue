@@ -1,12 +1,15 @@
 <template>
   <div :class="['user-avatar', big && 'user-avatar--big']">
     <!--- all random :) ---->
-    <avataaars></avataaars>
+    <avataaars v-if="userProfile" />
+    <Loading v-else />
   </div>
 </template>
 
 <script>
 import Avataaars from "vuejs-avataaars";
+import Loading from "../Loading";
+import { mapState } from "vuex";
 
 export default {
   name: "UserAvatar",
@@ -17,7 +20,11 @@ export default {
     },
   },
   components: {
+    Loading,
     Avataaars,
+  },
+  computed: {
+    ...mapState("account", ["userProfile"]),
   },
 };
 </script>

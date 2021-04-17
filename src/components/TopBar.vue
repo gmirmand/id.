@@ -1,8 +1,11 @@
 <template>
   <v-app-bar ligth class="flex-grow-0">
     <v-container fluid class="d-flex justify-space-between align-center">
-      <v-app-bar-nav-icon @click="toggle"></v-app-bar-nav-icon>
-      <router-link to="/">
+      <v-app-bar-nav-icon
+        v-if="userProfile"
+        @click="toggle"
+      ></v-app-bar-nav-icon>
+      <router-link to="/" class="self">
         <v-toolbar-title>
           <v-img
             :src="this.$vuetify.theme.dark ? logoDark : logo"
@@ -37,6 +40,7 @@
 <script>
 import logo from "@/assets/img/svg/logo.svg";
 import logoDark from "@/assets/img/svg/logo-dark.svg";
+import { mapState } from "vuex";
 export default {
   name: "TopBar",
   data() {
@@ -52,9 +56,9 @@ export default {
     darkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     },
-    showNav() {
-      return this.userProfile && Object.keys(this.userProfile).length > 0;
-    },
+  },
+  computed: {
+    ...mapState("account", ["userProfile"]),
   },
 };
 </script>
