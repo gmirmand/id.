@@ -1,7 +1,7 @@
 <template>
   <div :class="['user-avatar', big && 'user-avatar--big']">
     <!--- all random :) ---->
-    <avataaars v-if="userProfile" />
+    <Avataaars v-if="userProfile" />
     <Loading v-else />
   </div>
 </template>

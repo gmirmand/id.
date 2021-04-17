@@ -22,7 +22,40 @@
       </v-toolbar>
 
       <v-container class="d-flex flex-column align-center">
-        <UserAvatar big />
+        <Avataaars
+          :clotheType="'GraphicShirt'"
+          :topType="'Hat'"
+          :eyebrowType="'Angry'"
+          :eyeType="'Cry'"
+          :mouthType="'Eating'"
+          :facialHairColor="'Blonde'"
+          :graphicType="'Cumbia'"
+          class="avatar-editor__avatar mb-4"
+        />
+
+        <v-expansion-panels class="avatar-editor__items" popout>
+          <v-expansion-panel
+            v-for="(asset, index) of assetsTypes"
+            :key="`asset-${index}`"
+            class="avatar-editor__accessories"
+          >
+            <v-expansion-panel-header>
+              {{ asset.name }}
+            </v-expansion-panel-header>
+            <v-expansion-panel-content color="primary">
+              <div class="d-flex flex-wrap">
+                <button
+                  v-for="(type, typeKey) of asset.types"
+                  :key="`avatar-editor-item-${typeKey}`"
+                  :class="`avatar-editor__item avatar-editor__item--${asset.id}`"
+                  @click="update({ asset: asset.id, typeKey })"
+                >
+                  <svg v-html="type" />
+                </button>
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-container>
     </v-card>
   </v-dialog>
@@ -49,9 +82,11 @@ import {
 import Loading from "../Loading";
 import { mapState } from "vuex";
 
+import Avataaars from "vuejs-avataaars";
+
 export default {
   name: "AvatarEditor",
-  components: { Loading, UserAvatar },
+  components: { Loading, UserAvatar, Avataaars },
   data() {
     return {
       dialog: false,
@@ -66,11 +101,55 @@ export default {
       hatAndShirtColors: hatAndShirtColors,
       hairColors: hairColors,
       skinColors: skinColors,
-      circleColor: "#79cbb8",
+      assetsTypes: [
+        { name: "Bouche", id: "mouth", types: mouthTypes },
+        { name: "Yeux", id: "eye", types: eyeTypes },
+        { name: "Cheveux", id: "top", types: topTypes },
+        { name: "Sourcil", id: "eyebrow", types: eyebrowTypes },
+        { name: "Barbe", id: "facialHair", types: facialHairTypes },
+        { name: "Accessoire", id: "accessories", types: accessoriesTypes },
+        { name: "Tenue", id: "clothe", types: clothesType },
+        { name: "Motif tenue", id: "GraphicShirt", types: GraphicShirtTypes },
+      ],
     };
   },
   computed: {
     ...mapState("account", ["userProfile"]),
   },
+  methods: {
+    update(asset) {
+      console.log(asset);
+    },
+  },
 };
 </script>
+
+<style lang="scss" scoped>
+.avatar-editor {
+  &__avatar {
+    width: 200px;
+  }
+  &__items {
+    ::v-deep svg > g {
+      transform: inherit;
+    }
+  }
+
+  &__item {
+    width: 33%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    &--top {
+      width: 50%;
+
+      svg {
+        width: 100%;
+        transform: scale(0.6);
+      }
+    }
+  }
+}
+</style>
