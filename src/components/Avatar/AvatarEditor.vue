@@ -50,7 +50,8 @@
                 row-length="6"
                 shapes="circles"
                 popover-x="left"
-                :swatches="asset.colors"
+                :swatches="asset.colors.list"
+                @input="updateColor({ id: asset.colors.id, $event })"
               />
             </div>
             <v-expansion-panel-content color="primary">
@@ -59,7 +60,7 @@
                   v-for="(type, typeKey) of asset.types"
                   :key="`avatar-editor-item-${typeKey}`"
                   :class="`avatar-editor__item avatar-editor__item--${asset.id}`"
-                  @click="update({ asset: asset.id, typeKey })"
+                  @click="updateAsset({ asset: asset.id, typeKey })"
                 >
                   <svg v-html="type" />
                 </button>
@@ -119,27 +120,40 @@ export default {
       assetsTypes: [
         {
           name: "Bouche",
-          id: "mouth",
+          id: "mouthTypes",
           types: mouthTypes,
-          colors: Object.values(skinColors),
+          colors: {
+            id: "skinColors",
+            list: Object.values(skinColors),
+          },
         },
-        { name: "Yeux", id: "eye", types: eyeTypes },
+        { name: "Yeux", id: "eyeTypes", types: eyeTypes },
         {
           name: "Cheveux",
-          id: "top",
+          id: "topTypes",
           types: topTypes,
-          colors: Object.values(hairColors),
+          colors: {
+            id: "hairColors",
+            list: Object.values(hairColors),
+          },
         },
-        { name: "Sourcil", id: "eyebrow", types: eyebrowTypes },
-        { name: "Barbe", id: "facialHair", types: facialHairTypes },
-        { name: "Accessoire", id: "accessories", types: accessoriesTypes },
+        { name: "Sourcil", id: "eyebrowTypes", types: eyebrowTypes },
+        { name: "Barbe", id: "facialHairTypes", types: facialHairTypes },
+        { name: "Accessoire", id: "accessoriesTypes", types: accessoriesTypes },
         {
           name: "Tenue",
-          id: "clothe",
+          id: "clothesType",
           types: clothesType,
-          colors: Object.values(hatAndShirtColors),
+          colors: {
+            id: "hatAndShirtColors",
+            list: Object.values(hatAndShirtColors),
+          },
         },
-        { name: "Motif tenue", id: "GraphicShirt", types: GraphicShirtTypes },
+        {
+          name: "Motif tenue",
+          id: "GraphicShirtTypes",
+          types: GraphicShirtTypes,
+        },
       ],
     };
   },
@@ -147,7 +161,10 @@ export default {
     ...mapState("account", ["userProfile"]),
   },
   methods: {
-    update(asset) {
+    updateAsset(asset) {
+      console.log(asset);
+    },
+    updateColor(asset) {
       console.log(asset);
     },
   },
