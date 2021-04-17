@@ -1,10 +1,8 @@
 <template>
   <v-navigation-drawer :value="drawer" @input="toggle" absolute temporary>
     <v-list>
-      <v-list-item class="px-2">
-        <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
-        </v-list-item-avatar>
+      <v-list-item>
+        <UserAvatar />
       </v-list-item>
 
       <v-list-item link>
@@ -46,9 +44,11 @@
 
 <script>
 import { mapState } from "vuex";
+import UserAvatar from "@/components/Avatar/UserAvatar";
 
 export default {
   name: "Navigation",
+  components: { UserAvatar },
   data() {
     return {
       group: null,
