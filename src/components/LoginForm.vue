@@ -69,12 +69,11 @@
 import veeValidate from "@/mixins/veeValidate";
 import PasswordReset from "@/components/PasswordReset";
 import { mapState } from "vuex";
-import showSuccess from "@/mixins/showSuccess";
 
 export default {
   name: "LoginForm",
   components: { PasswordReset },
-  mixins: [veeValidate, showSuccess],
+  mixins: [veeValidate],
   data() {
     return {
       email: "",
