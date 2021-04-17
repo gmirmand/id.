@@ -36,17 +36,6 @@
           </v-btn>
         </v-form>
       </validation-observer>
-
-      <v-alert
-        :value="showSuccess"
-        dense
-        text
-        transition="scroll-x-transition"
-        type="success"
-        class="mt-4"
-      >
-        Profil mis à jour avec succès ! Bien joué bg
-      </v-alert>
     </div>
   </section>
 </template>
@@ -59,13 +48,12 @@ import {
   ValidationProvider,
 } from "vee-validate";
 import veeValidate from "@/mixins/veeValidate";
-import showSuccess from "@/mixins/showSuccess";
 
 setInteractionMode("eager");
 
 export default {
   components: { ValidationObserver, ValidationProvider },
-  mixins: [veeValidate, showSuccess],
+  mixins: [veeValidate],
   data() {
     return {
       name: "",
@@ -85,7 +73,9 @@ export default {
       this.name = "";
       this.email = "";
 
-      this.triggSuccess();
+      this.$store.dispatch("alerts/pushSuccessAlert", {
+        message: "Profil mis à jour avec succès ! Bien joué bg",
+      });
     },
   },
 };

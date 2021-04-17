@@ -9,6 +9,7 @@
         </v-container>
       </v-container>
     </v-main>
+    <Alerts />
   </v-app>
 </template>
 
@@ -16,6 +17,7 @@
 import { mapState } from "vuex";
 import Navigation from "@/components/Navigation";
 import TopBar from "@/components/TopBar";
+import Alerts from "@/components/Alerts";
 
 export default {
   data() {
@@ -23,7 +25,7 @@ export default {
       drawer: false,
     };
   },
-  components: { TopBar, Navigation },
+  components: { Alerts, TopBar, Navigation },
   computed: {
     ...mapState(["userProfile"]),
   },
