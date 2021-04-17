@@ -39,9 +39,20 @@
             :key="`asset-${index}`"
             class="avatar-editor__accessories"
           >
-            <v-expansion-panel-header>
-              {{ asset.name }}
-            </v-expansion-panel-header>
+            <div class="d-flex">
+              <v-expansion-panel-header>
+                {{ asset.name }}
+              </v-expansion-panel-header>
+              <v-swatches
+                v-if="asset.colors"
+                class="avatar-editor__swatche"
+                :trigger-style="{ width: '32px', height: '32px' }"
+                row-length="6"
+                shapes="circles"
+                popover-x="left"
+                :swatches="asset.colors"
+              />
+            </div>
             <v-expansion-panel-content color="primary">
               <div class="d-flex flex-wrap">
                 <button
@@ -63,6 +74,12 @@
 
 <script>
 import UserAvatar from "@/components/Avatar/UserAvatar";
+import VSwatches from "vue-swatches";
+
+// Import the styles too, typically in App.vue or main.js
+import "vue-swatches/dist/vue-swatches.css";
+
+import Avataaars from "vuejs-avataaars";
 
 // Import assetsTypes from git repo because npm package not up to date
 // https://github.com/orgordin/vuejs-avataaars
@@ -82,11 +99,9 @@ import {
 import Loading from "../Loading";
 import { mapState } from "vuex";
 
-import Avataaars from "vuejs-avataaars";
-
 export default {
   name: "AvatarEditor",
-  components: { Loading, UserAvatar, Avataaars },
+  components: { Loading, UserAvatar, Avataaars, VSwatches },
   data() {
     return {
       dialog: false,
@@ -98,17 +113,32 @@ export default {
       facialHairTypes: facialHairTypes,
       accessoriesTypes: accessoriesTypes,
       GraphicShirtTypes: GraphicShirtTypes,
-      hatAndShirtColors: hatAndShirtColors,
-      hairColors: hairColors,
-      skinColors: skinColors,
+      hatAndShirtColors: Object.values(hatAndShirtColors),
+      hairColors: Object.values(hairColors),
+      skinColors: Object.values(skinColors),
       assetsTypes: [
-        { name: "Bouche", id: "mouth", types: mouthTypes },
+        {
+          name: "Bouche",
+          id: "mouth",
+          types: mouthTypes,
+          colors: Object.values(skinColors),
+        },
         { name: "Yeux", id: "eye", types: eyeTypes },
-        { name: "Cheveux", id: "top", types: topTypes },
+        {
+          name: "Cheveux",
+          id: "top",
+          types: topTypes,
+          colors: Object.values(hairColors),
+        },
         { name: "Sourcil", id: "eyebrow", types: eyebrowTypes },
         { name: "Barbe", id: "facialHair", types: facialHairTypes },
         { name: "Accessoire", id: "accessories", types: accessoriesTypes },
-        { name: "Tenue", id: "clothe", types: clothesType },
+        {
+          name: "Tenue",
+          id: "clothe",
+          types: clothesType,
+          colors: Object.values(hatAndShirtColors),
+        },
         { name: "Motif tenue", id: "GraphicShirt", types: GraphicShirtTypes },
       ],
     };
@@ -129,6 +159,16 @@ export default {
   &__avatar {
     width: 200px;
   }
+
+  &__swatche {
+    position: absolute;
+    right: -16px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+
   &__items {
     ::v-deep svg > g {
       transform: inherit;
