@@ -65,6 +65,7 @@ const account = {
       await fb.usersCollection.doc(user.uid).set({
         name: form.name,
         email: form.email,
+        avatar: {},
       });
 
       // fetch user profile and set in state
@@ -84,6 +85,7 @@ const account = {
       await fb.usersCollection.doc(userId).update({
         name: user.name,
         email: user.email,
+        avatar: user.avatar,
       });
       commit("setUpdateProfilLoading", false);
 
@@ -98,6 +100,17 @@ const account = {
       //     userName: user.name,
       //   });
       // });
+    },
+    async updateAvatar({ dispatch, commit, state }, asset) {
+      const userId = fb.auth.currentUser.uid;
+      const user = state.userProfile;
+      user.avatar[asset.id] = asset.value;
+
+      commit("setUpdateProfilLoading", true);
+      await fb.usersCollection.doc(userId).update(user);
+      commit("setUpdateProfilLoading", false);
+
+      dispatch("fetchUserProfile", { uid: userId });
     },
   },
 };

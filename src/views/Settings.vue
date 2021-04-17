@@ -77,6 +77,7 @@ export default {
     return {
       name: "",
       email: "",
+      avatar: {},
     };
   },
   computed: {
@@ -87,6 +88,7 @@ export default {
       this.$store.dispatch("account/updateProfile", {
         name: this.name !== "" ? this.name : this.userProfile.name,
         email: this.email !== "" ? this.email : this.userProfile.email,
+        avatar: this.avatar !== {} ? this.avatar : this.userProfile.avatar,
       });
 
       this.name = "";

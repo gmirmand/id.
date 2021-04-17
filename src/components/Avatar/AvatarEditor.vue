@@ -21,17 +21,8 @@
         </v-toolbar-items>
       </v-toolbar>
 
-      <v-container class="d-flex flex-column align-center">
-        <Avataaars
-          :clotheType="'GraphicShirt'"
-          :topType="'Hat'"
-          :eyebrowType="'Angry'"
-          :eyeType="'Cry'"
-          :mouthType="'Eating'"
-          :facialHairColor="'Blonde'"
-          :graphicType="'Cumbia'"
-          class="avatar-editor__avatar mb-4"
-        />
+      <v-container v-if="userProfile" class="d-flex flex-column align-center">
+        <UserAvatar class="avatar-editor__avatar mb-4" />
 
         <v-expansion-panels class="avatar-editor__items" popout>
           <v-expansion-panel
@@ -40,19 +31,39 @@
             class="avatar-editor__accessories"
           >
             <div class="d-flex">
-              <v-expansion-panel-header>
+              <v-expansion-panel-header hide-actions>
                 {{ asset.name }}
               </v-expansion-panel-header>
-              <v-swatches
-                v-if="asset.colors"
-                class="avatar-editor__swatche"
-                :trigger-style="{ width: '32px', height: '32px' }"
-                row-length="6"
-                shapes="circles"
-                popover-x="left"
-                :swatches="asset.colors.list"
-                @input="updateColor({ id: asset.colors.id, $event })"
-              />
+              <div class="avatar-editor__swatches">
+                <v-swatches
+                  v-if="asset.colors"
+                  class="avatar-editor__swatche"
+                  :trigger-style="{ width: '32px', height: '32px' }"
+                  row-length="4"
+                  shapes="circles"
+                  popover-x="right"
+                  :swatches="asset.colors.list"
+                  :value="
+                    userProfile.avatar[asset.colors.id] &&
+                    userProfile.avatar[asset.colors.id].hex
+                  "
+                  @input="updateColor({ id: asset.colors.id, value: $event })"
+                />
+                <v-swatches
+                  v-if="asset.colors2"
+                  class="avatar-editor__swatche"
+                  :trigger-style="{ width: '32px', height: '32px' }"
+                  row-length="4"
+                  shapes="circles"
+                  popover-x="right"
+                  :swatches="asset.colors2.list"
+                  :value="
+                    userProfile.avatar[asset.colors2.id] &&
+                    userProfile.avatar[asset.colors2.id].hex
+                  "
+                  @input="updateColor({ id: asset.colors2.id, value: $event })"
+                />
+              </div>
             </div>
             <v-expansion-panel-content color="primary">
               <div class="d-flex flex-wrap">
@@ -60,7 +71,7 @@
                   v-for="(type, typeKey) of asset.types"
                   :key="`avatar-editor-item-${typeKey}`"
                   :class="`avatar-editor__item avatar-editor__item--${asset.id}`"
-                  @click="updateAsset({ asset: asset.id, typeKey })"
+                  @click="update({ id: asset.id, value: typeKey })"
                 >
                   <svg v-html="type" />
                 </button>
@@ -69,6 +80,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </v-container>
+      <Loading v-else />
     </v-card>
   </v-dialog>
 </template>
@@ -79,8 +91,6 @@ import VSwatches from "vue-swatches";
 
 // Import the styles too, typically in App.vue or main.js
 import "vue-swatches/dist/vue-swatches.css";
-
-import Avataaars from "vuejs-avataaars";
 
 // Import assetsTypes from git repo because npm package not up to date
 // https://github.com/orgordin/vuejs-avataaars
@@ -100,9 +110,13 @@ import {
 import Loading from "../Loading";
 import { mapState } from "vuex";
 
+const clotheColors = hatAndShirtColors;
+const topColors = hatAndShirtColors;
+const facialHairColors = hairColors;
+
 export default {
   name: "AvatarEditor",
-  components: { Loading, UserAvatar, Avataaars, VSwatches },
+  components: { Loading, UserAvatar, VSwatches },
   data() {
     return {
       dialog: false,
@@ -114,9 +128,11 @@ export default {
       facialHairTypes: facialHairTypes,
       accessoriesTypes: accessoriesTypes,
       GraphicShirtTypes: GraphicShirtTypes,
-      hatAndShirtColors: Object.values(hatAndShirtColors),
-      hairColors: Object.values(hairColors),
-      skinColors: Object.values(skinColors),
+      skinColors: skinColors,
+      hairColors: hairColors,
+      clotheColors: hatAndShirtColors,
+      facialHairColors: facialHairColors,
+      topColors: topColors,
       assetsTypes: [
         {
           name: "Bouche",
@@ -136,17 +152,33 @@ export default {
             id: "hairColors",
             list: Object.values(hairColors),
           },
+          colors2: {
+            id: "topColors",
+            list: Object.values(topColors),
+          },
         },
         { name: "Sourcil", id: "eyebrowTypes", types: eyebrowTypes },
-        { name: "Barbe", id: "facialHairTypes", types: facialHairTypes },
-        { name: "Accessoire", id: "accessoriesTypes", types: accessoriesTypes },
+        {
+          name: "Barbe",
+          id: "facialHairTypes",
+          types: facialHairTypes,
+          colors: {
+            id: "facialHairColors",
+            list: Object.values(facialHairColors),
+          },
+        },
+        {
+          name: "Accessoire",
+          id: "accessoriesTypes",
+          types: accessoriesTypes,
+        },
         {
           name: "Tenue",
           id: "clothesType",
           types: clothesType,
           colors: {
-            id: "hatAndShirtColors",
-            list: Object.values(hatAndShirtColors),
+            id: "clotheColors",
+            list: Object.values(clotheColors),
           },
         },
         {
@@ -161,11 +193,19 @@ export default {
     ...mapState("account", ["userProfile"]),
   },
   methods: {
-    updateAsset(asset) {
-      console.log(asset);
+    update(asset) {
+      this.$store.dispatch("account/updateAvatar", asset);
     },
     updateColor(asset) {
-      console.log(asset);
+      const assets = this[asset.id];
+      const assetEntrie = Object.entries(assets).find(
+        (a) => a[1] === asset.value
+      );
+
+      this.update({
+        ...asset,
+        value: { id: assetEntrie[0], hex: assetEntrie[1] },
+      });
     },
   },
 };
@@ -173,17 +213,28 @@ export default {
 
 <style lang="scss" scoped>
 .avatar-editor {
+  $this: &;
+
   &__avatar {
     width: 200px;
   }
 
-  &__swatche {
+  &__swatches {
     position: absolute;
-    right: -16px;
+    right: 1em;
+    height: 48px;
     top: 0;
-    bottom: 0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+  }
+
+  &__swatche {
+    + #{$this} {
+      &__swatche {
+        margin-left: 0.5em;
+      }
+    }
   }
 
   &__items {
