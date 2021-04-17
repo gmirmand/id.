@@ -1,18 +1,21 @@
 <template>
-  <section class="d-flex flex-grow-1">
-    <div class="d-flex flex-column">
+  <section class="d-flex flex-grow-1 justify-center">
+    <div class="d-flex flex-column align-center">
       <h3>Paramètre</h3>
-      <p>Modifie ton profil bg</p>
+      <p>Modifie ton profil</p>
 
       <validation-observer ref="observer" v-slot="{ invalid }">
-        <form @submit.prevent="updateProfile">
+        <v-form
+          @submit.prevent="updateProfile"
+          class="d-flex justify-center flex-column"
+        >
           <validation-provider v-slot="{ errors }" name="Name" rules="max:10">
             <v-text-field
               v-model="name"
               :counter="10"
               :error-messages="errors"
               :placeholder="userProfile.name"
-              label="Name"
+              label="Nom"
             ></v-text-field>
           </validation-provider>
           <validation-provider v-slot="{ errors }" name="email" rules="email">
@@ -24,10 +27,14 @@
             ></v-text-field>
           </validation-provider>
 
-          <v-btn :disabled="invalid" class="mr-4" type="submit">
+          <v-btn
+            :disabled="invalid || updateProfilLoading || (!name && !email)"
+            :loading="updateProfilLoading"
+            type="submit"
+          >
             Mettre à jour
           </v-btn>
-        </form>
+        </v-form>
       </validation-observer>
 
       <v-alert
@@ -47,38 +54,26 @@
 <script>
 import { mapState } from "vuex";
 import {
-  extend,
   setInteractionMode,
   ValidationObserver,
   ValidationProvider,
 } from "vee-validate";
-
-import { email, max } from "vee-validate/dist/rules";
-
-extend("max", {
-  ...max,
-  message:
-    "{_field_} a gavé trop de caractères... atta t'en a mis {length} ???",
-});
-
-extend("email", {
-  ...email,
-  message: "Wesh c'est un email ça ? Fait un effort",
-});
+import veeValidate from "@/mixins/veeValidate";
+import showSuccess from "@/mixins/showSuccess";
 
 setInteractionMode("eager");
 
 export default {
   components: { ValidationObserver, ValidationProvider },
+  mixins: [veeValidate, showSuccess],
   data() {
     return {
       name: "",
       email: "",
-      showSuccess: false,
     };
   },
   computed: {
-    ...mapState(["userProfile"]),
+    ...mapState(["userProfile", "updateProfilLoading"]),
   },
   methods: {
     updateProfile() {
@@ -90,11 +85,7 @@ export default {
       this.name = "";
       this.email = "";
 
-      this.showSuccess = true;
-
-      setTimeout(() => {
-        this.showSuccess = false;
-      }, 2000);
+      this.triggSuccess();
     },
   },
 };

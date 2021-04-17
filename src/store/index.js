@@ -10,6 +10,7 @@ export default new Vuex.Store({
     userProfile: {},
     loginLoading: false,
     signupLoading: false,
+    updateProfilLoading: false,
   },
   mutations: {
     setUserProfile(state, val) {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     setSignupLoading(state, val) {
       state.signupLoading = val;
+    },
+    setUpdateProfilLoading(state, val) {
+      state.updateProfilLoading = val;
     },
   },
   actions: {
@@ -72,13 +76,15 @@ export default new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
-    async updateProfile({ dispatch }, user) {
+    async updateProfile({ dispatch, commit }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object
+      commit("setUpdateProfilLoading", true);
       await fb.usersCollection.doc(userId).update({
         name: user.name,
         email: user.email,
       });
+      commit("setUpdateProfilLoading", false);
 
       dispatch("fetchUserProfile", { uid: userId });
 
