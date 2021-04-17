@@ -112,7 +112,7 @@ export default {
   }),
   methods: {
     signup() {
-      this.$store.dispatch("signup", {
+      this.$store.dispatch("account/signup", {
         email: this.email,
         password: this.password,
         name: this.name,

@@ -73,11 +73,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(["userProfile", "updateProfilLoading"]),
+    ...mapState("account", ["userProfile", "updateProfilLoading"]),
   },
   methods: {
     updateProfile() {
-      this.$store.dispatch("updateProfile", {
+      this.$store.dispatch("account/updateProfile", {
         name: this.name !== "" ? this.name : this.userProfile.name,
         email: this.email !== "" ? this.email : this.userProfile.email,
       });
