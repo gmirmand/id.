@@ -2,7 +2,11 @@
   <section class="d-flex flex-grow-1 justify-center">
     <div class="d-flex flex-column align-center">
       <h3>Paramètre</h3>
-      <p>Modifie ton profil</p>
+      <p class="mb-16">Modifie ton profil</p>
+
+      <div class="mb-6">
+        <AvatarEditor />
+      </div>
 
       <validation-observer ref="observer" v-slot="{ invalid }">
         <v-form
@@ -49,10 +53,18 @@ import {
 } from "vee-validate";
 import veeValidate from "@/mixins/veeValidate";
 
+import UserAvatar from "@/components/Avatar/UserAvatar";
+import AvatarEditor from "@/components/Avatar/AvatarEditor";
+
 setInteractionMode("eager");
 
 export default {
-  components: { ValidationObserver, ValidationProvider },
+  components: {
+    AvatarEditor,
+    ValidationObserver,
+    ValidationProvider,
+    UserAvatar,
+  },
   mixins: [veeValidate],
   data() {
     return {
