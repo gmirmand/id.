@@ -12,7 +12,7 @@
     <v-row justify="center">
       <validation-provider
         v-slot="{ errors }"
-        name="Nom"
+        name="Pseudo"
         rules="required|max:10"
       >
         <v-text-field

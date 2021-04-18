@@ -23,7 +23,7 @@
               :counter="10"
               :error-messages="errors"
               :placeholder="userProfile.name"
-              label="Nom"
+              label="Pseudo"
             ></v-text-field>
           </validation-provider>
           <validation-provider v-slot="{ errors }" name="email" rules="email">
