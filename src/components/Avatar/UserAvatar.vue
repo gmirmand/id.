@@ -3,7 +3,7 @@
     <Avataaars
       v-if="userProfile"
       :accessoriesType="userProfile.avatar.accessoriesTypes"
-      :clotheType="userProfile.avatar.clothesType"
+      :clotheType="userProfile.avatar.clotheTypes"
       :clotheColor="
         userProfile.avatar.clotheColors && userProfile.avatar.clotheColors.id
       "

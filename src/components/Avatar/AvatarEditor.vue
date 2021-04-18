@@ -72,7 +72,18 @@
                   :class="`avatar-editor__item avatar-editor__item--${asset.id}`"
                   @click="update({ id: asset.id, value: typeKey })"
                 >
-                  <svg v-html="type" />
+                  <svg
+                    v-if="typeKey !== 'Blank' && typeKey !== 'NoHair'"
+                    v-html="type"
+                  />
+                  <v-icon
+                    v-else
+                    color="black"
+                    x-large
+                    class="avatar-editor__icon-blank"
+                  >
+                    mdi-circle-off-outline
+                  </v-icon>
                 </button>
               </div>
             </v-expansion-panel-content>
@@ -122,7 +133,7 @@ export default {
       mouthTypes: mouthTypes,
       eyeTypes: eyeTypes,
       topTypes: topTypes,
-      clothesType: clothesType,
+      clotheTypes: clothesType,
       eyebrowTypes: eyebrowTypes,
       facialHairTypes: facialHairTypes,
       accessoriesTypes: accessoriesTypes,
@@ -144,7 +155,7 @@ export default {
         },
         { name: "Yeux", id: "eyeTypes", types: eyeTypes },
         {
-          name: "Cheveux",
+          name: "Cheveux / Chapeau",
           id: "topTypes",
           types: topTypes,
           colors: {
@@ -173,7 +184,7 @@ export default {
         },
         {
           name: "Tenue",
-          id: "clothesType",
+          id: "clotheTypes",
           types: clothesType,
           colors: {
             id: "clotheColors",
@@ -259,19 +270,34 @@ export default {
 
   &__item {
     width: 33%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
     position: relative;
+    vertical-align: middle;
+    overflow: hidden;
+    max-height: 110px;
 
-    &--top {
+    &--topTypes,
+    &--clotheTypes,
+    &--GraphicShirtTypes {
       width: 50%;
 
       svg {
-        width: 100%;
         transform: scale(0.6);
       }
     }
+
+    &--facialHairTypes,
+    &--accessoriesTypes {
+      width: 50%;
+
+      svg {
+        transform: scale(0.8);
+      }
+    }
+  }
+
+  &__icon-blank {
+    opacity: 0.5;
   }
 }
 </style>
