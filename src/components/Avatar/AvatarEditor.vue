@@ -3,15 +3,14 @@
     <template v-slot:activator="{ on, attrs }">
       <v-btn icon v-bind="attrs" v-on="on" text :elevation="0">
         <UserAvatar />
+        <v-icon class="avatar-editor__edit primary white--text">
+          mdi-pencil-outline
+        </v-icon>
       </v-btn>
     </template>
 
     <v-card>
       <v-toolbar dark color="primary">
-        <v-btn icon dark @click="dialog = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-
         <v-toolbar-title>Edition de ton avatar</v-toolbar-title>
 
         <v-spacer></v-spacer>
@@ -217,6 +216,21 @@ export default {
 
   &__avatar {
     width: 200px;
+  }
+
+  &__edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: scale(0.75);
+    transform-origin: right bottom;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0.75em;
   }
 
   &__swatches {
