@@ -5,14 +5,8 @@
         v-if="userProfile"
         @click="toggle"
       ></v-app-bar-nav-icon>
-      <router-link to="/" class="self">
-        <v-toolbar-title>
-          <v-img
-            :src="this.$vuetify.theme.dark ? logoDark : logo"
-            max-width="50"
-            max-height="50"
-          />
-        </v-toolbar-title>
+      <router-link to="/" class="self text-decoration-none text--primary">
+        <v-toolbar-title class="top-bar__logo"> id. </v-toolbar-title>
       </router-link>
       <div>
         <v-tooltip v-if="!$vuetify.theme.dark" bottom>
@@ -63,4 +57,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.top-bar {
+  &__logo {
+    font-size: 2em;
+    font-weight: bold;
+  }
+}
+</style>

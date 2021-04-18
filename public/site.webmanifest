@@ -1,0 +1,16 @@
+{
+    "name": "id. ggs",
+    "short_name": "id. ggs",
+    "icons": [
+        {
+            "src": "android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#79cbb8",
+    "background_color": "#79cbb8",
+    "start_url": "https://id.getget.space",
+    "display": "standalone",
+    "orientation": "portrait"
+}
