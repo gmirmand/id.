@@ -1,4 +1,4 @@
-# ggstreaming
+# id. gg.s
 
 ## Project setup
 ```
