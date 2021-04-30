@@ -1,12 +1,7 @@
 <template>
   <section class="dashboard">
-    <v-list>
-      <DashboardList personal />
-
-      <v-divider inset></v-divider>
-
-      <DashboardList shared />
-    </v-list>
+    <DashboardList personal class="mb-6" />
+    <DashboardList shared />
   </section>
 </template>
 
