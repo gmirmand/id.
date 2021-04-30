@@ -4,7 +4,9 @@
       {{ !shared ? "Vos comptes" : "Comptes partagés" }}
     </v-subheader>
 
-    <v-list-item link :key="'file.title'">
+    <v-list-item link :key="'file.title'" class="dashboard-list__item">
+      <LiveIcon class="dashboard-list__item-status" />
+
       <v-list-item-avatar> logo </v-list-item-avatar>
 
       <v-list-item-content>
@@ -17,7 +19,7 @@
 
       <v-list-item-action>
         <v-btn icon>
-          <v-icon color="grey lighten-1">mdi-comment</v-icon>
+          <v-icon color="grey lighten-1" small>mdi-comment</v-icon>
         </v-btn>
       </v-list-item-action>
 
@@ -30,9 +32,11 @@
 
 <script>
 import DashboardPlay from "./DashboardPlay";
+import LiveIcon from "../LiveIcon";
+
 export default {
   name: "DashboardList",
-  components: { DashboardPlay },
+  components: { LiveIcon, DashboardPlay },
   props: {
     personal: {
       type: Boolean,
@@ -46,4 +50,16 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.dashboard-list {
+  &__item {
+    position: relative;
+  }
+
+  &__item-status {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+</style>

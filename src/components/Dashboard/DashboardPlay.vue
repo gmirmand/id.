@@ -1,6 +1,6 @@
 <template>
   <v-btn icon class="dashboard-play">
-    <v-icon color="grey lighten-1">mdi-play</v-icon>
+    <v-icon color="grey lighten-1" large>mdi-play</v-icon>
   </v-btn>
 </template>
 
