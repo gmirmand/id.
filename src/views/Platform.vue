@@ -1,16 +1,32 @@
 <template>
-  <section class="platform">
-    <v-card outlined shaped class="pa-3">
+  <section v-if="loaded" class="platform">
+    <v-card outlined shaped class="pa-3 platform__card">
       <v-card-subtitle class="d-flex">
         <div class="mr-3">
           <PlatformAvatar :platform-id="1" big />
         </div>
-        <div>
+        <div v-if="!editMode">
           <div class="text-h3">title</div>
           <div class="text-subtitle">subtitle</div>
         </div>
-        <div class="align-self-center ml-auto">
-          <DashboardPlay :platform-id="1" />
+        <div v-else>
+          <v-combobox
+            v-model="platform"
+            :items="platforms"
+            label="Plateforme"
+            class="mb-3"
+          />
+          <v-textarea
+            dense
+            auto-grow
+            rows="1"
+            name="platform-informations"
+            label="Informations"
+            :value="platformInformations"
+          ></v-textarea>
+        </div>
+        <div class="platform__play align-self-center ml-auto">
+          <DashboardPlay :platform-id="1" button />
         </div>
       </v-card-subtitle>
       <v-divider />
@@ -33,7 +49,7 @@
         <template>
           <v-subheader key="today" v-text="'Aujourd\'hui'"></v-subheader>
 
-          <v-divider :key="'index'" :inset="'item.inset'"></v-divider>
+          <v-divider />
 
           <v-list-item>
             <user-avatar small class="mr-3" />
@@ -53,13 +69,16 @@
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+
+          <v-divider />
+
           <v-subheader
             key="other"
             v-text="'Ultérieurement'"
             class="mt-3"
           ></v-subheader>
 
-          <v-divider :key="'index'" :inset="'item.inset'"></v-divider>
+          <v-divider />
 
           <v-list-item>
             <user-avatar small class="mr-3" />
@@ -83,6 +102,9 @@
       </v-list>
     </div>
   </section>
+  <section v-else class="platform d-flex align-center justify-center">
+    <Loading />
+  </section>
 </template>
 
 <script>
@@ -90,11 +112,41 @@ import { mapState } from "vuex";
 import DashboardPlay from "../components/Dashboard/DashboardPlay";
 import PlatformAvatar from "../components/Platform/PlatformAvatar";
 import UserAvatar from "../components/Avatar/UserAvatar";
+import Loading from "../components/Loading";
 
 export default {
-  components: { UserAvatar, PlatformAvatar, DashboardPlay },
+  components: { Loading, UserAvatar, PlatformAvatar, DashboardPlay },
+  data() {
+    return {
+      platform: "Netflix",
+      platforms: [
+        "Netflix",
+        "Amazon prime",
+        "Apple TV",
+        "Disney +",
+        "Hulu",
+        "OCS",
+        "YouTube",
+        "Rakuten TV",
+        "MyCANAL",
+        "SFR Play VOD",
+        "Warner Bros",
+        "Salto",
+        "Crunchyroll",
+        "ADN",
+        "Wakanim",
+      ],
+      platformInformations: "blablabl",
+    };
+  },
   computed: {
     ...mapState("account", ["userProfile"]),
+    editMode() {
+      return this.userProfile.uid === this.userProfile.uid;
+    },
+    loaded() {
+      return this.userProfile;
+    },
   },
   methods: {},
 };
@@ -102,5 +154,15 @@ export default {
 
 <style lang="scss" scoped>
 .platform {
+  &__card {
+    position: relative;
+  }
+
+  &__play {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(50%, -50%);
+  }
 }
 </style>

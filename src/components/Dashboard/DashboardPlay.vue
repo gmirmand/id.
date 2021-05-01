@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn icon class="dashboard-play" v-bind="attrs" v-on="on">
-        <v-icon color="grey lighten-1" large>mdi-play</v-icon>
+      <v-btn class="mx-2" fab color="primary" v-bind="attrs" v-on="on">
+        <v-icon dark large>mdi-play</v-icon>
       </v-btn>
     </template>
     <v-card>
@@ -89,6 +89,10 @@ export default {
     platformId: {
       type: Number,
       required: true,
+    },
+    button: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
