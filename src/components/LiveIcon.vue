@@ -22,7 +22,7 @@ export default {
 
 <style scoped lang="scss">
 .live-icon {
-  $width: 0.75em;
+  $width: 0.66em;
 
   width: $width;
   height: $width;
