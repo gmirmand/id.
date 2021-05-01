@@ -23,12 +23,6 @@
       </v-list-item-content>
 
       <v-list-item-action>
-        <v-btn icon>
-          <v-icon color="grey lighten-1" small>mdi-comment</v-icon>
-        </v-btn>
-      </v-list-item-action>
-
-      <v-list-item-action>
         <DashboardPlay :platform-id="1" />
       </v-list-item-action>
     </v-list-item>
