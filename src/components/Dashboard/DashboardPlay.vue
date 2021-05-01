@@ -6,11 +6,14 @@
       </v-btn>
     </template>
     <v-card>
-      <v-card-title>
+      <v-card-title class="d-flex flex-column align-start">
         <span class="headline"
           >Désactiver au bout <br />
-          de {{ duration }}</span
-        >
+          de {{ duration }}
+        </span>
+        <span v-if="timer > 60" class="font-weight-light text-subtitle-1">
+          ( {{ timer }}min )
+        </span>
       </v-card-title>
       <v-card-text class="mt-10">
         <v-slider
