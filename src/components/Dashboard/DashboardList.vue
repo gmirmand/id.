@@ -26,7 +26,7 @@
       </v-list-item-action>
 
       <v-list-item-action>
-        <DashboardPlay accound-id="accound-id" />
+        <DashboardPlay :platform-id="1" />
       </v-list-item-action>
     </v-list-item>
   </v-list>
