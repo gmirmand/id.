@@ -29,6 +29,12 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/platform/:id",
+    name: "Platform",
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/Platform.vue"),
+  },
 ];
 
 const router = new VueRouter({

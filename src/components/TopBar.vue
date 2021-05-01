@@ -1,10 +1,7 @@
 <template>
   <v-app-bar ligth class="flex-grow-0">
     <v-container fluid class="d-flex justify-space-between align-center">
-      <v-app-bar-nav-icon
-        v-if="userProfile"
-        @click="toggle"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-if="userProfile" @click="toggle" />
       <router-link to="/" class="self text-decoration-none text--primary">
         <v-toolbar-title class="top-bar__logo"> id. </v-toolbar-title>
       </router-link>

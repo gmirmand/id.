@@ -4,7 +4,12 @@
       {{ !shared ? "Vos comptes" : "Comptes partagés" }}
     </v-subheader>
 
-    <v-list-item link :key="'file.title'" class="dashboard-list__item">
+    <v-list-item
+      :to="`/platform/${1}`"
+      link
+      :key="'file.title'"
+      class="dashboard-list__item"
+    >
       <LiveIcon class="dashboard-list__item-status" />
 
       <v-list-item-avatar class="mr-3 ml-1">

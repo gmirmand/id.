@@ -45,7 +45,7 @@ const account = {
       const userProfile = await fb.usersCollection.doc(user.uid).get();
 
       // set user profile in state
-      commit("setUserProfile", userProfile.data());
+      commit("setUserProfile", { uid: user.uid, ...userProfile.data() });
 
       // change route to dashboard
       if (router.currentRoute.path === "/login") {
