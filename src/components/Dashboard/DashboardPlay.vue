@@ -11,7 +11,7 @@
           >Désactiver au bout <br />
           de {{ duration }}
         </span>
-        <span v-if="timer > 60" class="font-weight-light text-subtitle-1">
+        <span v-if="timer > 40" class="font-weight-light text-subtitle-1">
           ( {{ timer }}min )
         </span>
       </v-card-title>
