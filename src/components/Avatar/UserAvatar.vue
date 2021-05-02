@@ -44,6 +44,12 @@
       <span v-if="showName" class="user-avatar__name text-caption text-center">
         {{ userProfile.name }}
       </span>
+      <span
+        v-if="highlight"
+        class="user-avatar__owner text-caption text-center yellow--text"
+      >
+        Propriétaire
+      </span>
     </div>
     <Loading v-else />
   </div>
@@ -78,6 +84,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    highlight: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     LiveIcon,
@@ -105,6 +115,10 @@ export default {
   &__name {
     max-width: 6em;
     line-height: 1;
+  }
+
+  &__owner {
+    white-space: nowrap;
   }
 
   &--big {

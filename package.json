@@ -13,6 +13,7 @@
     "firebase": "^8.3.3",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
+    "vue-clipboard2": "^0.3.1",
     "vue-router": "^3.2.0",
     "vue-swatches": "^2.1.1",
     "vuejs-avataaars": "^4.0.1",

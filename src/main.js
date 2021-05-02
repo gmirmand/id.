@@ -5,6 +5,9 @@ import store from "./store";
 import { auth } from "./firebase";
 import "./assets/scss/app.scss";
 import vuetify from "./plugins/vuetify";
+import VueClipboard from "vue-clipboard2";
+
+Vue.use(VueClipboard);
 
 Vue.config.productionTip = false;
 

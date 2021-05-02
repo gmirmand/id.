@@ -6,8 +6,8 @@
           <PlatformAvatar :platform="platform" />
         </div>
         <div v-if="!editMode">
-          <div class="text-h3">title</div>
-          <div class="text-subtitle">subtitle</div>
+          <div class="text-h3">{{ platform }}</div>
+          <div class="text-subtitle">{{ platformInformations }}</div>
         </div>
         <div v-else>
           <v-form name="platformForm" @submit.prevent="updatePlatform">
@@ -34,9 +34,48 @@
         </div>
       </v-card-subtitle>
       <v-divider />
+
+      <div class="platform__ids pt-4 pb-2">
+        <div v-if="editMode" class="platform__ids-editor"></div>
+        <div v-else class="platform__ids-infos">
+          <v-btn
+            class="pa-3 mb-3 mr-3"
+            rounded
+            small
+            v-clipboard:copy="login"
+            v-clipboard:success="() => copySuccess('Identifiant')"
+          >
+            <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
+            Identifiant
+          </v-btn>
+          <v-btn
+            class="pa-3 mb-3"
+            rounded
+            small
+            v-clipboard:copy="password"
+            v-clipboard:success="() => copySuccess('Mot de passe')"
+          >
+            <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
+            Mot de passe
+          </v-btn>
+        </div>
+        <span class="platform__edited text-caption">
+          Dernière modification Mardi 02 Mai 2021 à 18h59
+        </span>
+      </div>
+
+      <v-divider />
       <v-card-text>
         <div class="platform__member-title mb-3">Membres</div>
         <div class="platform__member-list d-flex flex-wrap">
+          <UserAvatar
+            small
+            live
+            show-name
+            :user-id="1"
+            class="mr-2 mb-2"
+            highlight
+          />
           <UserAvatar small live show-name :user-id="1" class="mr-2 mb-2" />
           <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
           <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
@@ -141,12 +180,14 @@ export default {
         "Wakanim",
       ],
       platformInformations: "blablabl",
+      login: "identifiant@identifiant.com",
+      password: "1234",
     };
   },
   computed: {
     ...mapState("account", ["userProfile"]),
     editMode() {
-      return this.userProfile.uid === this.userProfile.uid;
+      return this.userProfile.uid !== this.userProfile.uid;
     },
     loaded() {
       return this.userProfile;
@@ -156,6 +197,11 @@ export default {
     updatePlatform() {
       console.log(this.platform);
       console.log(this.platformInformations);
+    },
+    copySuccess(field) {
+      this.$store.dispatch("alerts/pushSuccessAlert", {
+        message: `${field} copié !`,
+      });
     },
   },
 };
