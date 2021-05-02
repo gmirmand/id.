@@ -3,27 +3,31 @@
     <v-card outlined shaped class="pa-3 platform__card">
       <v-card-subtitle class="d-flex">
         <div class="mr-3">
-          <PlatformAvatar :platform-id="1" big />
+          <PlatformAvatar :platform="platform" big />
         </div>
         <div v-if="!editMode">
           <div class="text-h3">title</div>
           <div class="text-subtitle">subtitle</div>
         </div>
         <div v-else>
-          <v-combobox
-            v-model="platform"
-            :items="platforms"
-            label="Plateforme"
-            class="mb-3"
-          />
-          <v-textarea
-            dense
-            auto-grow
-            rows="1"
-            name="platform-informations"
-            label="Informations"
-            :value="platformInformations"
-          ></v-textarea>
+          <v-form name="platformForm" @submit.prevent="updatePlatform">
+            <v-combobox
+              v-model="platform"
+              :items="platforms"
+              label="Plateforme"
+              class="mb-3"
+            />
+            <v-textarea
+              dense
+              auto-grow
+              rows="1"
+              name="platform-informations"
+              label="Informations"
+              :value="platformInformations"
+            ></v-textarea>
+
+            <v-btn type="submit"> Mettre à jour </v-btn>
+          </v-form>
         </div>
         <div class="platform__play align-self-center ml-auto">
           <DashboardPlay :platform-id="1" button />
@@ -148,7 +152,12 @@ export default {
       return this.userProfile;
     },
   },
-  methods: {},
+  methods: {
+    updatePlatform() {
+      console.log(this.platform);
+      console.log(this.platformInformations);
+    },
+  },
 };
 </script>
 

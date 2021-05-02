@@ -6,10 +6,6 @@ import { auth } from "./firebase";
 import "./assets/scss/app.scss";
 import vuetify from "./plugins/vuetify";
 
-import VueInitialsImg from "vue-initials-img";
-
-Vue.use(VueInitialsImg);
-
 Vue.config.productionTip = false;
 
 let app;

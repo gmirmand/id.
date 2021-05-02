@@ -10,16 +10,14 @@
       :key="'file.title'"
       class="dashboard-list__item"
     >
-      <v-list-item-avatar class="mr-3 ml-1 overflow-visible">
-        <PlatformAvatar :platform-id="1" />
+      <v-list-item-avatar class="mr-5 ml-1 overflow-visible">
+        <PlatformAvatar platform="Netflix" />
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <v-list-item-title v-text="'file.title'"></v-list-item-title>
+        <v-list-item-title v-text="'Netflix'"></v-list-item-title>
 
-        <v-list-item-subtitle
-          v-text="'file.description'"
-        ></v-list-item-subtitle>
+        <v-list-item-subtitle v-text="'de Getget'"></v-list-item-subtitle>
       </v-list-item-content>
 
       <v-list-item-action>

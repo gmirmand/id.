@@ -2,19 +2,21 @@
   <div :class="['platform-avatar', big && 'platform-avatar--big']">
     <LiveIcon class="platform-avatar__status" active />
     <div class="platform-avatar__avatar">
-      <vue-initials-img class="platform-avatar__generated-img" name="Youtube" />
+      <avatar :fullname="platform" class="platform-avatar__generated-img" />
     </div>
   </div>
 </template>
 
 <script>
 import LiveIcon from "../LiveIcon";
+import Avatar from "vue-avatar-component";
+
 export default {
   name: "PlatformAvatar",
-  components: { LiveIcon },
+  components: { LiveIcon, Avatar },
   props: {
-    platformId: {
-      type: Number,
+    platform: {
+      type: String,
       required: true,
     },
     big: {
