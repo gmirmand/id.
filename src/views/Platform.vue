@@ -49,7 +49,7 @@
               :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
               :type="show ? 'text' : 'password'"
               name="input-password"
-              label="Mot de passe du compte"
+              label="Mot de passe"
               counter
               @click:append="show = !show"
             ></v-text-field>
