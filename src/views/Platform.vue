@@ -10,7 +10,7 @@
           <div class="text-subtitle">{{ platformInformations }}</div>
         </div>
         <div v-else>
-          <v-form name="platformForm" @submit.prevent="updatePlatform">
+          <v-form name="platformForm" @submit.prevent="updatePlatformInfos">
             <v-combobox
               v-model="platform"
               :items="platforms"
@@ -36,7 +36,26 @@
       <v-divider />
 
       <div class="platform__ids pt-4 pb-2">
-        <div v-if="editMode" class="platform__ids-editor"></div>
+        <div v-if="editMode" class="platform__ids-editor">
+          <v-form @submit.prevent="updatePlatformIds">
+            <v-text-field
+              v-model="login"
+              type="text"
+              name="input-login"
+              label="Identifiant"
+            ></v-text-field>
+            <v-text-field
+              v-model="password"
+              :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show ? 'text' : 'password'"
+              name="input-password"
+              label="Mot de passe du compte"
+              counter
+              @click:append="show = !show"
+            ></v-text-field>
+            <v-btn type="submit" class="mb-3"> Mettre à jour </v-btn>
+          </v-form>
+        </div>
         <div v-else class="platform__ids-infos">
           <v-btn
             class="pa-3 mb-3 mr-3"
@@ -182,19 +201,24 @@ export default {
       platformInformations: "blablabl",
       login: "identifiant@identifiant.com",
       password: "1234",
+      show: false,
     };
   },
   computed: {
     ...mapState("account", ["userProfile"]),
     editMode() {
-      return this.userProfile.uid !== this.userProfile.uid;
+      return this.userProfile.uid === this.userProfile.uid;
     },
     loaded() {
       return this.userProfile;
     },
   },
   methods: {
-    updatePlatform() {
+    updatePlatformIds() {
+      console.log(this.login);
+      console.log(this.password);
+    },
+    updatePlatformInfos() {
       console.log(this.platform);
       console.log(this.platformInformations);
     },
