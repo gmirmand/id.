@@ -3,7 +3,7 @@
     <v-card outlined shaped class="pa-3 platform__card">
       <v-card-subtitle class="d-flex">
         <div class="mr-3">
-          <PlatformAvatar :platform="platform" big />
+          <PlatformAvatar :platform="platform" />
         </div>
         <div v-if="!editMode">
           <div class="text-h3">title</div>
