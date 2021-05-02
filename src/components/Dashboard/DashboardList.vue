@@ -1,5 +1,5 @@
 <template>
-  <v-list class="dashboard-list">
+  <v-list class="dashboard-list" elevation="4">
     <v-subheader :class="['white--text primary']">
       {{ !shared ? "Vos comptes" : "Comptes partagés" }}
     </v-subheader>

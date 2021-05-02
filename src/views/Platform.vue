@@ -1,6 +1,6 @@
 <template>
   <section v-if="loaded" class="platform">
-    <v-card outlined shaped class="pa-3 platform__card">
+    <v-card outlined shaped class="pa-3 platform__card" elevation="4">
       <v-card-subtitle class="d-flex">
         <div class="mr-3">
           <PlatformAvatar :platform="platform" />
