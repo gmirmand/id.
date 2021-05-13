@@ -84,24 +84,8 @@
       </div>
 
       <v-divider />
-      <v-card-text>
-        <div class="platform__member-title mb-3">Membres</div>
-        <div class="platform__member-list d-flex flex-wrap">
-          <UserAvatar
-            small
-            live
-            show-name
-            :user-id="1"
-            class="mr-2 mb-2"
-            highlight
-          />
-          <UserAvatar small live show-name :user-id="1" class="mr-2 mb-2" />
-          <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
-          <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
-          <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
-          <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
-        </div>
-      </v-card-text>
+
+      <PlatformMembers />
     </v-card>
 
     <div class="platform__activity pa-3">
@@ -173,11 +157,11 @@
 import { mapState } from "vuex";
 import DashboardPlay from "../components/Dashboard/DashboardPlay";
 import PlatformAvatar from "../components/Platform/PlatformAvatar";
-import UserAvatar from "../components/Avatar/UserAvatar";
 import Loading from "../components/Loading";
+import PlatformMembers from "@/components/Platform/PlatformMembers";
 
 export default {
-  components: { Loading, UserAvatar, PlatformAvatar, DashboardPlay },
+  components: { PlatformMembers, Loading, PlatformAvatar, DashboardPlay },
   data() {
     return {
       platform: "Netflix",

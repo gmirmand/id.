@@ -10,7 +10,7 @@
       v-if="userProfile"
       class="d-flex flex-column justify-center align-center"
     >
-      <div class="user-avatar__avatar-wrapper">
+      <v-avatar class="user-avatar__avatar-wrapper">
         <LiveIcon v-if="live" active class="user-avatar__live" />
         <Avataaars
           class="user-avatar__avatar"
@@ -40,7 +40,7 @@
             userProfile.avatar.topColors && userProfile.avatar.topColors.id
           "
         />
-      </div>
+      </v-avatar>
       <span v-if="showName" class="user-avatar__name text-caption text-center">
         {{ userProfile.name }}
       </span>
@@ -93,6 +93,9 @@ export default {
     LiveIcon,
     Loading,
     Avataaars,
+  },
+  mounted() {
+    console.log(this.userProfile);
   },
   computed: {
     ...mapState("account", ["userProfile"]),
