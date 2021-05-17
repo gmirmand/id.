@@ -9,10 +9,10 @@
       >
         <v-card-subtitle class="d-flex">
           <div class="mr-3">
-            <PlatformAvatar :platform="platform" />
+            <PlatformAvatar :platform="accountObj" />
           </div>
           <div v-if="!editMode">
-            <div class="text-h3">{{ platform.name }}</div>
+            <div class="text-h3">{{ accountObj.name }}</div>
             <div class="text-subtitle">{{ platformDescription }}</div>
           </div>
           <div v-else>
@@ -168,14 +168,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import DashboardPlay from "../components/Dashboard/DashboardPlay";
 import PlatformAvatar from "../components/Platform/PlatformAvatar";
 import Loading from "../components/Loading";
 import PlatformMembers from "@/components/Platform/PlatformMembers";
 import UserAvatar from "../components/Avatar/UserAvatar";
 import * as fb from "../firebase";
-import { i18nTranslateFr } from "../helpers/i18nTranslation";
+import { i18nTranslateEn, i18nTranslateFr } from "../helpers/i18nTranslation";
 
 export default {
   components: {
@@ -197,6 +197,7 @@ export default {
   computed: {
     ...mapState("account", ["userProfile"]),
     ...mapState("platforms", ["platformsList"]),
+    ...mapGetters("accounts", ["account"]),
     isCreateMode() {
       return this.$route.name === "AddPlatform";
     },
@@ -204,20 +205,26 @@ export default {
       return this.userProfile.uid === this.userProfile.uid;
     },
     loaded() {
-      return this.userProfile && (this.account || this.isCreateMode);
+      return this.userProfile && (this.accountObj || this.isCreateMode);
     },
     platformsMap() {
-      return this.platformsList?.map((platform) => {
-        return {
-          text: platform.name,
-          value: platform.id,
-        };
-      });
+      return this.platformsList?.map((platform) => platform.name);
     },
     platform() {
       return this.platformsList?.find((platform) => {
         return platform.id === this.platformValue?.value;
       });
+    },
+    accountObj() {
+      return this.account(this.$route.params.id);
+    },
+  },
+  mounted() {
+    this.autocompleteValues();
+  },
+  watch: {
+    account() {
+      this.autocompleteValues();
     },
   },
   methods: {
@@ -246,6 +253,15 @@ export default {
       this.$store.dispatch("alerts/pushSuccessAlert", {
         message: `${field} copié !`,
       });
+    },
+    autocompleteValues() {
+      this.platformValue = this.accountObj.name;
+      this.platformDescription = this.accountObj.description;
+      this.platformLogin = this.accountObj.login;
+      this.platformSubLogin = i18nTranslateEn(
+        this.accountObj.pwuid,
+        this.userProfile.uid
+      );
     },
   },
 };

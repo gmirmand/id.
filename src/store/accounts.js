@@ -40,6 +40,9 @@ const accounts = {
         (account) => account.ownerUid === rootState.account.userProfile.uid
       );
     },
+    account: (state) => (id) => {
+      return state.accountsList?.find((account) => account.id === id);
+    },
   },
 };
 
