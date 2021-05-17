@@ -51,10 +51,10 @@
               label="Identifiant"
             ></v-text-field>
             <v-text-field
-              v-model="platformPassword"
+              v-model="platformSubLogin"
               :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
               :type="show ? 'text' : 'password'"
-              name="input-password"
+              name="input-sub-login"
               label="Mot de passe"
               counter
               @click:append="show = !show"
@@ -78,7 +78,7 @@
               class="pa-3 mb-3"
               rounded
               small
-              v-clipboard:copy="platformPassword"
+              v-clipboard:copy="platformSubLogin"
               v-clipboard:success="() => copySuccess('Mot de passe')"
             >
               <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
@@ -175,6 +175,7 @@ import Loading from "../components/Loading";
 import PlatformMembers from "@/components/Platform/PlatformMembers";
 import UserAvatar from "../components/Avatar/UserAvatar";
 import * as fb from "../firebase";
+import { i18nTranslateFr } from "../helpers/i18nTranslation";
 
 export default {
   components: {
@@ -189,7 +190,7 @@ export default {
       platformValue: undefined,
       platformDescription: undefined,
       platformLogin: undefined,
-      platformPassword: undefined,
+      platformSubLogin: undefined,
       show: false,
     };
   },
@@ -222,6 +223,11 @@ export default {
   methods: {
     async updatePlatformInfos() {},
     async createPlatform() {
+      const subLogin = i18nTranslateFr(
+        this.platformSubLogin,
+        this.userProfile.uid
+      );
+
       await fb.usersCollection
         .doc(this.userProfile.uid)
         .collection("accounts")
@@ -231,7 +237,13 @@ export default {
           description: this.platformDescription,
           logo: this.platform.logo,
           login: this.platformLogin,
-          password: this.platformPassword,
+          pwuid: subLogin,
+        })
+        .then(() => {
+          this.$store.dispatch("account/fetchUserProfile", {
+            uid: this.userProfile.uid,
+          });
+          this.$router.push({ name: "Dashboard" });
         });
     },
     copySuccess(field) {

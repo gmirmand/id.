@@ -44,8 +44,19 @@ const account = {
       // fetch user profile
       const userProfile = await fb.usersCollection.doc(user.uid).get();
 
+      await fb.usersCollection
+        .doc(user.uid)
+        .collection("accounts")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            !userProfile.accounts
+              ? (userProfile.accounts = [{ ...doc.data(), id: doc.id }])
+              : userProfile.accounts.push({ ...doc.data(), id: doc.id });
+          });
+        });
       // set user profile in state
-      commit("setUserProfile", { uid: user.uid, ...userProfile.data() });
+      commit("setUserProfile", { uid: user.uid, ...userProfile });
 
       // change route to dashboard
       if (router.currentRoute.path === "/login") {
@@ -90,16 +101,6 @@ const account = {
       commit("setUpdateProfilLoading", false);
 
       dispatch("fetchUserProfile", { uid: userId });
-
-      // example to update all posts by user
-      // const postDocs = await fb.postsCollection
-      //   .where("userId", "==", userId)
-      //   .get();
-      // postDocs.forEach((doc) => {
-      //   fb.postsCollection.doc(doc.id).update({
-      //     userName: user.name,
-      //   });
-      // });
     },
     async updateAvatar({ dispatch, commit, state }, asset) {
       const userId = fb.auth.currentUser.uid;
@@ -111,6 +112,11 @@ const account = {
       commit("setUpdateProfilLoading", false);
 
       dispatch("fetchUserProfile", { uid: userId });
+    },
+  },
+  getters: {
+    accounts: (state) => {
+      return state.userProfile.accounts;
     },
   },
 };

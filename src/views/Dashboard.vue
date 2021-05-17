@@ -14,9 +14,13 @@
 
 <script>
 import DashboardList from "../components/Dashboard/DashboardList";
+import { mapGetters } from "vuex";
+
 export default {
   components: { DashboardList },
-  computed: {},
+  computed: {
+    ...mapGetters("account", ["accounts"]),
+  },
   methods: {},
 };
 </script>
