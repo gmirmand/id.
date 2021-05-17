@@ -22,6 +22,7 @@ const auth = firebase.auth();
 // collection references
 const usersCollection = db.collection("users");
 const platformsCollection = db.collection("platforms");
+const accountsCollection = db.collection("accounts");
 
 // storage
 const storage = firebase.storage();
@@ -34,5 +35,6 @@ export {
   auth,
   usersCollection,
   platformsCollection,
+  accountsCollection,
   storagePlatformsLogos,
 };

@@ -64,7 +64,7 @@ import LiveIcon from "../LiveIcon";
 export default {
   name: "UserAvatar",
   props: {
-    userId: {
+    userUid: {
       type: Number,
       default: undefined,
     },

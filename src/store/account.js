@@ -83,28 +83,28 @@ const account = {
       router.push("/login");
     },
     async updateProfile({ dispatch, commit }, user) {
-      const userId = fb.auth.currentUser.uid;
+      const userUid = fb.auth.currentUser.uid;
       // update user object
       commit("setUpdateProfilLoading", true);
-      await fb.usersCollection.doc(userId).update({
+      await fb.usersCollection.doc(userUid).update({
         name: user.name,
         email: user.email,
         avatar: user.avatar,
       });
       commit("setUpdateProfilLoading", false);
 
-      dispatch("fetchUserProfile", { uid: userId });
+      dispatch("fetchUserProfile", { uid: userUid });
     },
     async updateAvatar({ dispatch, commit, state }, asset) {
-      const userId = fb.auth.currentUser.uid;
+      const userUid = fb.auth.currentUser.uid;
       const user = state.userProfile;
       user.avatar[asset.id] = asset.value;
 
       commit("setUpdateProfilLoading", true);
-      await fb.usersCollection.doc(userId).update(user);
+      await fb.usersCollection.doc(userUid).update(user);
       commit("setUpdateProfilLoading", false);
 
-      dispatch("fetchUserProfile", { uid: userId });
+      dispatch("fetchUserProfile", { uid: userUid });
     },
   },
 };

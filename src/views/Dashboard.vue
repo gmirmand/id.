@@ -1,6 +1,6 @@
 <template>
   <section class="dashboard">
-    <DashboardList personal class="mb-6" :accounts="accounts" />
+    <DashboardList personal class="mb-6" :accounts="personalAccounts" />
 
     <div class="d-flex justify-center mt-2 mb-6">
       <v-btn class="mx-2" fab elevation="6">
@@ -19,7 +19,7 @@ import { mapGetters } from "vuex";
 export default {
   components: { DashboardList },
   computed: {
-    ...mapGetters("account", ["accounts"]),
+    ...mapGetters("accounts", ["personalAccounts"]),
   },
   methods: {},
 };

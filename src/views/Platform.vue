@@ -204,7 +204,7 @@ export default {
       return this.userProfile.uid === this.userProfile.uid;
     },
     loaded() {
-      return this.userProfile;
+      return this.userProfile && (this.account || this.isCreateMode);
     },
     platformsMap() {
       return this.platformsList?.map((platform) => {
@@ -228,11 +228,10 @@ export default {
         this.userProfile.uid
       );
 
-      await fb.usersCollection
-        .doc(this.userProfile.uid)
-        .collection("accounts")
+      await fb.accountsCollection
         .doc()
         .set({
+          ownerUid: this.userProfile.uid,
           name: this.platform.name,
           description: this.platformDescription,
           logo: this.platform.logo,
@@ -240,9 +239,6 @@ export default {
           pwuid: subLogin,
         })
         .then(() => {
-          this.$store.dispatch("account/fetchUserProfile", {
-            uid: this.userProfile.uid,
-          });
           this.$router.push({ name: "Dashboard" });
         });
     },

@@ -33,11 +33,19 @@ export default {
       default: undefined,
     },
   },
+  mounted() {
+    this.getLogo();
+  },
   watch: {
-    platform(platform) {
-      if (platform?.logo) {
+    platform() {
+      this.getLogo();
+    },
+  },
+  methods: {
+    getLogo() {
+      if (this.platform?.logo) {
         storagePlatformsLogos
-          .child(platform.logo)
+          .child(this.platform.logo)
           .getDownloadURL()
           .then((url) => {
             this.platformLogo = url;
