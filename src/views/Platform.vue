@@ -1,16 +1,21 @@
 <template>
   <section v-if="loaded" class="platform">
     <v-card outlined shaped class="pa-3 platform__card" elevation="4">
-      <v-card-subtitle class="d-flex">
-        <div class="mr-3">
-          <PlatformAvatar :platform="platform" />
-        </div>
-        <div v-if="!editMode">
-          <div class="text-h3">{{ platform.name }}</div>
-          <div class="text-subtitle">{{ platformInformations }}</div>
-        </div>
-        <div v-else>
-          <v-form name="platformForm" @submit.prevent="updatePlatformInfos">
+      <v-form
+        name="platformForm"
+        @submit.prevent="
+          isCreateMode ? createPlatform() : updatePlatformInfos()
+        "
+      >
+        <v-card-subtitle class="d-flex">
+          <div class="mr-3">
+            <PlatformAvatar :platform="platform" />
+          </div>
+          <div v-if="!editMode">
+            <div class="text-h3">{{ platform.name }}</div>
+            <div class="text-subtitle">{{ platformDescription }}</div>
+          </div>
+          <div v-else>
             <v-combobox
               v-model="platformValue"
               :items="platformsMap"
@@ -23,29 +28,30 @@
               rows="1"
               name="platform-informations"
               label="Informations"
-              :value="platformInformations"
+              v-model="platformDescription"
             ></v-textarea>
 
-            <v-btn type="submit"> Mettre à jour </v-btn>
-          </v-form>
-        </div>
-        <div class="platform__play align-self-center ml-auto">
-          <DashboardPlay :platform-id="1" button />
-        </div>
-      </v-card-subtitle>
-      <v-divider />
+            <v-btn v-if="!isCreateMode" type="submit"> Mettre à jour </v-btn>
+          </div>
+          <div
+            class="platform__play align-self-center ml-auto"
+            v-if="!isCreateMode"
+          >
+            <DashboardPlay :platform-id="1" button />
+          </div>
+        </v-card-subtitle>
+        <v-divider />
 
-      <div class="platform__ids pt-4 pb-2">
-        <div v-if="editMode" class="platform__ids-editor">
-          <v-form @submit.prevent="updatePlatformIds">
+        <div class="platform__ids pt-4 pb-2">
+          <div v-if="editMode" class="platform__ids-editor">
             <v-text-field
-              v-model="login"
+              v-model="platformLogin"
               type="text"
               name="input-login"
               label="Identifiant"
             ></v-text-field>
             <v-text-field
-              v-model="password"
+              v-model="platformPassword"
               :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
               :type="show ? 'text' : 'password'"
               name="input-password"
@@ -53,42 +59,50 @@
               counter
               @click:append="show = !show"
             ></v-text-field>
-            <v-btn type="submit" class="mb-3"> Mettre à jour </v-btn>
-          </v-form>
+            <v-btn type="submit" class="mb-3" v-if="!isCreateMode">
+              Mettre à jour
+            </v-btn>
+          </div>
+          <div v-else class="platform__ids-infos">
+            <v-btn
+              class="pa-3 mb-3 mr-3"
+              rounded
+              small
+              v-clipboard:copy="platformLogin"
+              v-clipboard:success="() => copySuccess('Identifiant')"
+            >
+              <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
+              Identifiant
+            </v-btn>
+            <v-btn
+              class="pa-3 mb-3"
+              rounded
+              small
+              v-clipboard:copy="platformPassword"
+              v-clipboard:success="() => copySuccess('Mot de passe')"
+            >
+              <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
+              Mot de passe
+            </v-btn>
+          </div>
+          <span class="platform__edited text-caption" v-if="!isCreateMode">
+            Dernière modification Mardi 02 Mai 2021 à 18h59
+          </span>
         </div>
-        <div v-else class="platform__ids-infos">
-          <v-btn
-            class="pa-3 mb-3 mr-3"
-            rounded
-            small
-            v-clipboard:copy="login"
-            v-clipboard:success="() => copySuccess('Identifiant')"
-          >
-            <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
-            Identifiant
-          </v-btn>
-          <v-btn
-            class="pa-3 mb-3"
-            rounded
-            small
-            v-clipboard:copy="password"
-            v-clipboard:success="() => copySuccess('Mot de passe')"
-          >
-            <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
-            Mot de passe
+
+        <div class="d-flex justify-center">
+          <v-btn type="submit" class="mb-3" color="primary" v-if="isCreateMode">
+            Ajouter la plateforme
           </v-btn>
         </div>
-        <span class="platform__edited text-caption">
-          Dernière modification Mardi 02 Mai 2021 à 18h59
-        </span>
-      </div>
+      </v-form>
 
-      <v-divider />
+      <v-divider v-if="!isCreateMode" />
 
-      <PlatformMembers />
+      <PlatformMembers v-if="!isCreateMode" />
     </v-card>
 
-    <div class="platform__activity pa-3">
+    <div class="platform__activity pa-3" v-if="!isCreateMode">
       <div class="text-subtitle-h3 text-center mb-3 mt-6">Activités</div>
       <v-divider />
       <v-list three-line>
@@ -160,6 +174,7 @@ import PlatformAvatar from "../components/Platform/PlatformAvatar";
 import Loading from "../components/Loading";
 import PlatformMembers from "@/components/Platform/PlatformMembers";
 import UserAvatar from "../components/Avatar/UserAvatar";
+import * as fb from "../firebase";
 
 export default {
   components: {
@@ -172,15 +187,18 @@ export default {
   data() {
     return {
       platformValue: undefined,
-      platformInformations: "blablabl",
-      login: "identifiant@identifiant.com",
-      password: "1234",
+      platformDescription: undefined,
+      platformLogin: undefined,
+      platformPassword: undefined,
       show: false,
     };
   },
   computed: {
     ...mapState("account", ["userProfile"]),
     ...mapState("platforms", ["platformsList"]),
+    isCreateMode() {
+      return this.$route.name === "AddPlatform";
+    },
     editMode() {
       return this.userProfile.uid === this.userProfile.uid;
     },
@@ -202,13 +220,19 @@ export default {
     },
   },
   methods: {
-    updatePlatformIds() {
-      console.log(this.login);
-      console.log(this.password);
-    },
-    updatePlatformInfos() {
-      console.log(this.platform);
-      console.log(this.platformInformations);
+    async updatePlatformInfos() {},
+    async createPlatform() {
+      await fb.usersCollection
+        .doc(this.userProfile.uid)
+        .collection("accounts")
+        .doc()
+        .set({
+          name: this.platform.name,
+          description: this.platformDescription,
+          logo: this.platform.logo,
+          login: this.platformLogin,
+          password: this.platformPassword,
+        });
     },
     copySuccess(field) {
       this.$store.dispatch("alerts/pushSuccessAlert", {

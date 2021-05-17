@@ -22,7 +22,7 @@ const routes = [
   },
   {
     path: "/settings",
-    name: "settings",
+    name: "Settings",
     component: () =>
       import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
     meta: {
@@ -33,7 +33,13 @@ const routes = [
     path: "/platform/:id",
     name: "Platform",
     component: () =>
-      import(/* webpackChunkName: "login" */ "../views/Platform.vue"),
+      import(/* webpackChunkName: "platform" */ "../views/Platform.vue"),
+  },
+  {
+    path: "/add-platform",
+    name: "AddPlatform",
+    component: () =>
+      import(/* webpackChunkName: "add-platform" */ "../views/Platform.vue"),
   },
 ];
 
