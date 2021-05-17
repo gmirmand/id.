@@ -25,4 +25,6 @@ auth.onAuthStateChanged((user) => {
   if (user) {
     store.dispatch("account/fetchUserProfile", user);
   }
+
+  store.dispatch("platforms/fetchPlatforms");
 });

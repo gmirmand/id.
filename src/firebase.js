@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage";
 
 // firebase init - add your own config here
 const firebaseConfig = {
@@ -20,6 +21,18 @@ const auth = firebase.auth();
 
 // collection references
 const usersCollection = db.collection("users");
+const platformsCollection = db.collection("platforms");
+
+// storage
+const storage = firebase.storage();
+const storageRef = storage.ref("id");
+const storagePlatformsLogos = storageRef.child("platforms/logos");
 
 // export utils/refs
-export { db, auth, usersCollection };
+export {
+  db,
+  auth,
+  usersCollection,
+  platformsCollection,
+  storagePlatformsLogos,
+};

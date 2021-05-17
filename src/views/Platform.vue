@@ -6,14 +6,14 @@
           <PlatformAvatar :platform="platform" />
         </div>
         <div v-if="!editMode">
-          <div class="text-h3">{{ platform }}</div>
+          <div class="text-h3">{{ platform.name }}</div>
           <div class="text-subtitle">{{ platformInformations }}</div>
         </div>
         <div v-else>
           <v-form name="platformForm" @submit.prevent="updatePlatformInfos">
             <v-combobox
-              v-model="platform"
-              :items="platforms"
+              v-model="platformValue"
+              :items="platformsMap"
               label="Plateforme"
               class="mb-3"
             />
@@ -159,29 +159,19 @@ import DashboardPlay from "../components/Dashboard/DashboardPlay";
 import PlatformAvatar from "../components/Platform/PlatformAvatar";
 import Loading from "../components/Loading";
 import PlatformMembers from "@/components/Platform/PlatformMembers";
+import UserAvatar from "../components/Avatar/UserAvatar";
 
 export default {
-  components: { PlatformMembers, Loading, PlatformAvatar, DashboardPlay },
+  components: {
+    UserAvatar,
+    PlatformMembers,
+    Loading,
+    PlatformAvatar,
+    DashboardPlay,
+  },
   data() {
     return {
-      platform: "Netflix",
-      platforms: [
-        "Netflix",
-        "Amazon prime",
-        "Apple TV",
-        "Disney +",
-        "Hulu",
-        "OCS",
-        "YouTube",
-        "Rakuten TV",
-        "MyCANAL",
-        "SFR Play VOD",
-        "Warner Bros",
-        "Salto",
-        "Crunchyroll",
-        "ADN",
-        "Wakanim",
-      ],
+      platformValue: undefined,
       platformInformations: "blablabl",
       login: "identifiant@identifiant.com",
       password: "1234",
@@ -190,11 +180,25 @@ export default {
   },
   computed: {
     ...mapState("account", ["userProfile"]),
+    ...mapState("platforms", ["platformsList"]),
     editMode() {
       return this.userProfile.uid === this.userProfile.uid;
     },
     loaded() {
       return this.userProfile;
+    },
+    platformsMap() {
+      return this.platformsList?.map((platform) => {
+        return {
+          text: platform.name,
+          value: platform.id,
+        };
+      });
+    },
+    platform() {
+      return this.platformsList?.find((platform) => {
+        return platform.id === this.platformValue?.value;
+      });
     },
   },
   methods: {

@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import account from "./account";
 import alerts from "./alerts";
+import platforms from "./platforms";
 
 Vue.use(Vuex);
 
@@ -14,5 +15,6 @@ export default new Vuex.Store({
   modules: {
     account,
     alerts,
+    platforms,
   },
 });

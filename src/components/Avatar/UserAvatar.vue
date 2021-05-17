@@ -94,9 +94,6 @@ export default {
     Loading,
     Avataaars,
   },
-  mounted() {
-    console.log(this.userProfile);
-  },
   computed: {
     ...mapState("account", ["userProfile"]),
   },
@@ -109,6 +106,7 @@ export default {
 
   &__avatar-wrapper {
     position: relative;
+    overflow: visible;
   }
 
   &__avatar {

@@ -1,5 +1,5 @@
 <template>
-  <v-list class="dashboard-list" elevation="4">
+  <v-list class="dashboard-list" elevation="4" v-if="!platformsLoading">
     <v-subheader :class="['white--text primary']">
       {{ !shared ? "Vos comptes" : "Comptes partagés" }}
     </v-subheader>
@@ -11,11 +11,11 @@
       class="dashboard-list__item"
     >
       <v-list-item-avatar class="mr-5 ml-1 overflow-visible">
-        <PlatformAvatar platform="Netflix" />
+        <PlatformAvatar :platform="platform" />
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <v-list-item-title v-text="'Netflix'"></v-list-item-title>
+        <v-list-item-title v-text="platform.name"></v-list-item-title>
 
         <v-list-item-subtitle v-text="'de Getget'"></v-list-item-subtitle>
       </v-list-item-content>
@@ -25,16 +25,30 @@
       </v-list-item-action>
     </v-list-item>
   </v-list>
+  <section v-else class="platform d-flex align-center justify-center">
+    <Loading />
+  </section>
 </template>
 
 <script>
 import DashboardPlay from "./DashboardPlay";
 import LiveIcon from "../LiveIcon";
 import PlatformAvatar from "../Platform/PlatformAvatar";
+import { mapState } from "vuex";
+import Loading from "../Loading";
 
 export default {
   name: "DashboardList",
-  components: { PlatformAvatar, LiveIcon, DashboardPlay },
+  components: { Loading, PlatformAvatar, LiveIcon, DashboardPlay },
+  computed: {
+    ...mapState("platforms", ["platformsList"]),
+    platform() {
+      return this.platformsList && this.platformsList[0];
+    },
+    platformsLoading() {
+      return !this.platform;
+    },
+  },
   props: {
     personal: {
       type: Boolean,
