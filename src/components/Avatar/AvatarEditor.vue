@@ -1,8 +1,14 @@
 <template>
-  <v-dialog v-model="dialog" fullscreen hide-overlay transition="avatar-editor">
+  <v-dialog
+    v-if="userProfile && userProfile.avatar"
+    v-model="avatarEditorDialog"
+    fullscreen
+    hide-overlay
+    transition="avatar-editor"
+  >
     <template v-slot:activator="{ on, attrs }">
-      <v-btn icon v-bind="attrs" v-on="on" text :elevation="0">
-        <UserAvatar />
+      <v-btn icon v-bind="attrs" v-on="on" text :elevation="0" class="mb-3">
+        <UserAvatar big />
         <v-icon class="avatar-editor__edit primary white--text">
           mdi-pencil-outline
         </v-icon>
@@ -16,12 +22,12 @@
         <v-spacer></v-spacer>
 
         <v-toolbar-items>
-          <v-btn dark text @click="dialog = false"> Save </v-btn>
+          <v-btn dark text @click="avatarEditorDialog = false"> Fermer </v-btn>
         </v-toolbar-items>
       </v-toolbar>
 
       <v-container v-if="userProfile" class="d-flex flex-column align-center">
-        <UserAvatar class="avatar-editor__avatar mb-4" />
+        <UserAvatar big class="avatar-editor__avatar mb-4" />
 
         <v-expansion-panels class="avatar-editor__items" popout>
           <v-expansion-panel
@@ -93,6 +99,9 @@
       <Loading v-else />
     </v-card>
   </v-dialog>
+  <section v-else class="platform d-flex align-center justify-center">
+    <Loading />
+  </section>
 </template>
 
 <script>
@@ -119,6 +128,7 @@ import {
 } from "./assetsTypes/colors";
 import Loading from "../Loading";
 import { mapState } from "vuex";
+import { randomProperty } from "../../helpers/objects";
 
 const clotheColors = hatAndShirtColors;
 const topColors = hatAndShirtColors;
@@ -129,7 +139,7 @@ export default {
   components: { Loading, UserAvatar, VSwatches },
   data() {
     return {
-      dialog: false,
+      avatarEditorDialog: false,
       mouthTypes: mouthTypes,
       eyeTypes: eyeTypes,
       topTypes: topTypes,
@@ -151,6 +161,7 @@ export default {
           colors: {
             id: "skinColors",
             list: Object.values(skinColors),
+            objList: skinColors,
           },
         },
         { name: "Yeux", id: "eyeTypes", types: eyeTypes },
@@ -161,10 +172,12 @@ export default {
           colors: {
             id: "hairColors",
             list: Object.values(hairColors),
+            objList: hairColors,
           },
           colors2: {
             id: "topColors",
             list: Object.values(topColors),
+            objList: topColors,
           },
         },
         { name: "Sourcil", id: "eyebrowTypes", types: eyebrowTypes },
@@ -175,6 +188,7 @@ export default {
           colors: {
             id: "facialHairColors",
             list: Object.values(facialHairColors),
+            objList: facialHairColors,
           },
         },
         {
@@ -189,6 +203,7 @@ export default {
           colors: {
             id: "clotheColors",
             list: Object.values(clotheColors),
+            objList: clotheColors,
           },
         },
         {
@@ -198,6 +213,21 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    if (this.$route.hash === "#avatar") {
+      this.avatarEditorDialog = true;
+    }
+  },
+  watch: {
+    userProfile(val) {
+      if (!val.avatar) {
+        this.$store.dispatch("account/updateProfile", {
+          ...val,
+          avatar: this.generateRandomAvatar(),
+        });
+      }
+    },
   },
   computed: {
     ...mapState("account", ["userProfile"]),
@@ -216,6 +246,33 @@ export default {
         ...asset,
         value: { id: assetEntrie[0], hex: assetEntrie[1] },
       });
+    },
+    generateRandomAvatar() {
+      const randomAvatar = {};
+      this.assetsTypes.forEach((asset) => {
+        randomAvatar[asset.id] = randomProperty(asset.types);
+      });
+      this.assetsTypes
+        .filter((asset) => asset.colors)
+        .map((asset) => asset.colors)
+        .forEach((color) => {
+          const randColorProperty = randomProperty(color.objList);
+          randomAvatar[color.id] = {
+            hex: color.objList[randColorProperty],
+            id: randColorProperty,
+          };
+        });
+      this.assetsTypes
+        .filter((asset) => asset.colors2)
+        .map((asset) => asset.colors2)
+        .forEach((color) => {
+          const randColorProperty = randomProperty(color.objList);
+          randomAvatar[color.id] = {
+            hex: color.objList[randColorProperty],
+            id: randColorProperty,
+          };
+        });
+      return randomAvatar;
     },
   },
 };

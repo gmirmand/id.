@@ -52,7 +52,11 @@ const account = {
 
           // change route to dashboard
           if (router.currentRoute.path === "/login") {
-            router.push("/");
+            router.push(
+              userProfile?.avatar
+                ? { name: "Dashboard" }
+                : { name: "Settings", hash: "#avatar" }
+            );
           }
         });
     },
@@ -61,14 +65,14 @@ const account = {
       commit("setLoginLoading", true);
       await fb.auth
         .createUserWithEmailAndPassword(form.email, form.password)
-        .then(async (user) => {
+        .then(async ({ user }) => {
           commit("setLoginLoading", false);
 
           // create user profile object in userCollections
           await fb.usersCollection.doc(user.uid).set({
             name: form.name,
             email: form.email,
-            avatar: {},
+            uid: user.uid,
           });
 
           // fetch user profile and set in state
@@ -104,7 +108,7 @@ const account = {
 
       dispatch("fetchUserProfile", { uid: userUid });
     },
-    async updateAvatar({ dispatch, commit, state }, asset) {
+    async updateAvatar({ commit, state }, asset) {
       const userUid = fb.auth.currentUser.uid;
       const user = state.userProfile;
       user.avatar[asset.id] = asset.value;
@@ -112,8 +116,6 @@ const account = {
       commit("setUpdateProfilLoading", true);
       await fb.usersCollection.doc(userUid).update(user);
       commit("setUpdateProfilLoading", false);
-
-      dispatch("fetchUserProfile", { uid: userUid });
     },
   },
 };

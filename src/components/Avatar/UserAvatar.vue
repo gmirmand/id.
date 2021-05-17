@@ -107,10 +107,14 @@ export default {
   &__avatar-wrapper {
     position: relative;
     overflow: visible;
+    width: 5em !important;
+    min-width: 5em !important;
+    height: 5em !important;
   }
 
   &__avatar {
-    width: 5em;
+    width: 100%;
+    height: 100%;
   }
 
   &__name {
@@ -124,16 +128,20 @@ export default {
 
   &--big {
     #{$this} {
-      &__avatar {
-        width: 12em;
+      &__avatar-wrapper {
+        width: 9em !important;
+        min-width: 9em !important;
+        height: 9em !important;
       }
     }
   }
 
   &--small {
     #{$this} {
-      &__avatar {
-        width: 3em;
+      &__avatar-wrapper {
+        width: 3em !important;
+        min-width: 3em !important;
+        height: 3em !important;
       }
     }
   }
