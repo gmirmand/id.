@@ -42,27 +42,19 @@ const account = {
     },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
-      let userProfile = await fb.usersCollection.doc(user.uid).get();
-      userProfile = userProfile.data();
-
-      await fb.usersCollection
+      let userProfile = await fb.usersCollection
         .doc(user.uid)
-        .collection("accounts")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            !userProfile.accounts
-              ? (userProfile.accounts = [{ ...doc.data(), id: doc.id }])
-              : userProfile.accounts.push({ ...doc.data(), id: doc.id });
-          });
-        });
-      // set user profile in state
-      commit("setUserProfile", { uid: user.uid, ...userProfile });
+        .onSnapshot((querySnapshot) => {
+          userProfile = querySnapshot.data();
 
-      // change route to dashboard
-      if (router.currentRoute.path === "/login") {
-        router.push("/");
-      }
+          // set user profile in state
+          commit("setUserProfile", { uid: user.uid, ...userProfile });
+
+          // change route to dashboard
+          if (router.currentRoute.path === "/login") {
+            router.push("/");
+          }
+        });
     },
     async signup({ dispatch, commit }, form) {
       // sign user up
@@ -113,11 +105,6 @@ const account = {
       commit("setUpdateProfilLoading", false);
 
       dispatch("fetchUserProfile", { uid: userId });
-    },
-  },
-  getters: {
-    accounts: (state) => {
-      return state.userProfile?.accounts;
     },
   },
 };

@@ -11,13 +11,8 @@ const platforms = {
     platformsLoading: false,
   },
   mutations: {
-    addPlatforms(state, val) {
-      state.platformsList
-        ? state.platformsList.push(val)
-        : (state.platformsList = [val]);
-    },
     setPlatforms(state, val) {
-      state.platforms = val;
+      state.platformsList = val;
     },
     setPlatformsLoading(state, val) {
       state.platformsLoading = val;
@@ -27,10 +22,12 @@ const platforms = {
     async fetchPlatforms({ commit }) {
       // fetch platforms
       commit("setPlatformsLoading", true);
-      await fb.platformsCollection.get().then((querySnapshot) => {
+      await fb.platformsCollection.onSnapshot((querySnapshot) => {
+        let platforms = [];
         querySnapshot.forEach((doc) => {
-          commit("addPlatforms", { ...doc.data(), id: doc.id });
+          platforms.push({ ...doc.data(), id: doc.id });
         });
+        commit("setPlatforms", platforms);
       });
       commit("setPlatformsLoading", false);
     },
