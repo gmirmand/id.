@@ -5,10 +5,10 @@
       dense
       text
       transition="scroll-x-transition"
-      type="success"
+      :type="alert.type"
       class="mt-4"
-      v-for="(alert, index) of successAlert"
-      :key="`alert-sucess-${index}`"
+      v-for="(alert, index) of alertsList"
+      :key="`alert-${index}`"
     >
       {{ alert.message }}
     </v-alert>
@@ -20,7 +20,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "Alerts",
-  computed: mapState("alerts", ["successAlert"]),
+  computed: mapState("alerts", ["alertsList"]),
 };
 </script>
 

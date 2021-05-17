@@ -81,6 +81,7 @@
         color="primary"
         :disabled="invalid || signupLoading"
         class="mb-8"
+        type="submit"
       >
         Créé mon compte !
       </v-btn>

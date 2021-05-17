@@ -6,21 +6,45 @@ Vue.use(Vuex);
 const account = {
   namespaced: true,
   state: {
-    successAlert: [],
+    alertsList: [],
   },
   mutations: {
-    pushSucessAlert(state, payload) {
-      state.successAlert.push(payload);
+    pushAlert(state, payload) {
+      state.alertsList.push(payload);
     },
-    popLastSuccessAlert(state) {
-      state.successAlert.pop();
+    popLastAlert(state) {
+      state.alertsList.pop();
     },
   },
   actions: {
     pushSuccessAlert({ commit }, payload) {
-      commit("pushSucessAlert", { message: payload.message || "Succés" });
+      commit("pushAlert", {
+        message: payload.message || "Succés",
+        type: "success",
+      });
       setTimeout(() => {
-        commit("popLastSuccessAlert");
+        commit("popLastAlert");
+      }, payload.duration || 8000);
+    },
+    pushErrorAlert({ commit }, payload) {
+      commit("pushAlert", {
+        message: payload.message || "Une erreur est survenue",
+        type: "error",
+      });
+      setTimeout(() => {
+        commit("popLastAlert");
+      }, payload.duration || 8000);
+    },
+    pushInfoAlert({ commit }, payload) {
+      commit("pushAlert", { message: payload.message, type: "info" });
+      setTimeout(() => {
+        commit("popLastAlert");
+      }, payload.duration || 8000);
+    },
+    pushWarningAlert({ commit }, payload) {
+      commit("pushAlert", { message: payload.message, type: "warning" });
+      setTimeout(() => {
+        commit("popLastAlert");
       }, payload.duration || 8000);
     },
   },

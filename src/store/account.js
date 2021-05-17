@@ -59,21 +59,30 @@ const account = {
     async signup({ dispatch, commit }, form) {
       // sign user up
       commit("setLoginLoading", true);
-      const { user } = await fb.auth.createUserWithEmailAndPassword(
-        form.email,
-        form.password
-      );
-      commit("setLoginLoading", false);
+      await fb.auth
+        .createUserWithEmailAndPassword(form.email, form.password)
+        .then(async (user) => {
+          commit("setLoginLoading", false);
 
-      // create user profile object in userCollections
-      await fb.usersCollection.doc(user.uid).set({
-        name: form.name,
-        email: form.email,
-        avatar: {},
-      });
+          // create user profile object in userCollections
+          await fb.usersCollection.doc(user.uid).set({
+            name: form.name,
+            email: form.email,
+            avatar: {},
+          });
 
-      // fetch user profile and set in state
-      dispatch("fetchUserProfile", user);
+          // fetch user profile and set in state
+          dispatch("fetchUserProfile", user);
+        })
+        .catch((err) => {
+          dispatch(
+            "alerts/pushErrorAlert",
+            {
+              message: err.message,
+            },
+            { root: true }
+          );
+        });
     },
     async logout({ commit }) {
       await fb.auth.signOut();
