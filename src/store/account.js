@@ -42,7 +42,8 @@ const account = {
     },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
-      const userProfile = await fb.usersCollection.doc(user.uid).get();
+      let userProfile = await fb.usersCollection.doc(user.uid).get();
+      userProfile = userProfile.data();
 
       await fb.usersCollection
         .doc(user.uid)
@@ -116,7 +117,7 @@ const account = {
   },
   getters: {
     accounts: (state) => {
-      return state.userProfile.accounts;
+      return state.userProfile?.accounts;
     },
   },
 };
