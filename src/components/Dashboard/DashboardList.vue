@@ -1,23 +1,26 @@
 <template>
-  <v-list class="dashboard-list" elevation="4" v-if="!platformsLoading">
+  <v-list class="dashboard-list" elevation="4">
     <v-subheader :class="['white--text primary']">
       {{ !shared ? "Vos comptes" : "Comptes partagés" }}
     </v-subheader>
 
     <v-list-item
-      :to="`/platform/${1}`"
+      v-for="account of accounts"
+      :to="`/platform/${account.id}`"
       link
-      :key="'file.title'"
+      :key="account.id"
       class="dashboard-list__item"
     >
       <v-list-item-avatar class="mr-5 ml-1 overflow-visible">
-        <PlatformAvatar :platform="platform" />
+        <PlatformAvatar :platform="account" />
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <v-list-item-title v-text="platform.name"></v-list-item-title>
+        <v-list-item-title v-text="account.name"></v-list-item-title>
 
-        <v-list-item-subtitle v-text="'de Getget'"></v-list-item-subtitle>
+        <v-list-item-subtitle
+          v-text="personal ? 'Vous' : account.owner.name"
+        ></v-list-item-subtitle>
       </v-list-item-content>
 
       <v-list-item-action>
@@ -25,9 +28,6 @@
       </v-list-item-action>
     </v-list-item>
   </v-list>
-  <section v-else class="platform d-flex align-center justify-center">
-    <Loading />
-  </section>
 </template>
 
 <script>
@@ -42,14 +42,12 @@ export default {
   components: { Loading, PlatformAvatar, LiveIcon, DashboardPlay },
   computed: {
     ...mapState("platforms", ["platformsList"]),
-    platform() {
-      return this.platformsList && this.platformsList[0];
-    },
-    platformsLoading() {
-      return !this.platform;
-    },
   },
   props: {
+    accounts: {
+      type: Array,
+      default: () => [],
+    },
     personal: {
       type: Boolean,
       default: true,

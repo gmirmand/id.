@@ -1,6 +1,6 @@
 <template>
   <section class="dashboard">
-    <DashboardList personal class="mb-6" />
+    <DashboardList personal class="mb-6" :accounts="accounts" />
 
     <div class="d-flex justify-center mt-2 mb-6">
       <v-btn class="mx-2" fab elevation="6">
