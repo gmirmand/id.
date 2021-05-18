@@ -65,6 +65,7 @@ export default {
       !e && this.$emit("close");
     },
     logout() {
+      this.$emit("close");
       this.$store.dispatch("account/logout");
     },
   },

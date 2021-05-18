@@ -1,12 +1,8 @@
 <template>
   <v-app>
     <v-main class="app">
-      <TopBar @toggle="drawer = !drawer" />
-      <Navigation
-        v-if="userProfile"
-        :drawer="drawer"
-        @close="drawer = !drawer"
-      />
+      <TopBar @toggle="toggle(!drawer)" />
+      <Navigation v-if="userProfile" :drawer="drawer" @close="toggle(false)" />
       <v-container fluid class="pa-0 app__container d-flex flex-column">
         <v-container>
           <router-view />
@@ -32,6 +28,11 @@ export default {
   components: { Alerts, TopBar, Navigation },
   computed: {
     ...mapState("account", ["userProfile"]),
+  },
+  methods: {
+    toggle(value) {
+      this.drawer = value;
+    },
   },
 };
 </script>
