@@ -230,11 +230,11 @@ export default {
     },
   },
   computed: {
-    ...mapState("account", ["userProfile"]),
+    ...mapState("user", ["userProfile"]),
   },
   methods: {
     update(asset) {
-      this.$store.dispatch("account/updateAvatar", asset);
+      this.$store.dispatch("user/updateAvatar", asset);
     },
     updateColor(asset) {
       const assets = this[asset.id];

@@ -96,7 +96,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("account", ["userProfile"]),
+    ...mapState("user", ["userProfile"]),
     duration() {
       return formatDistance(0, this.timer * 60 * 1000, dateFnsConfig);
     },

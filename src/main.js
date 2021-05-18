@@ -23,7 +23,7 @@ auth.onAuthStateChanged((user) => {
   }
 
   if (user) {
-    store.dispatch("account/fetchUserProfile", user);
+    store.dispatch("user/fetchUserProfile", user);
     store.dispatch("accounts/fetchAccounts", user);
   }
 

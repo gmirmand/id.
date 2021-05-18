@@ -81,11 +81,11 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["userProfile", "updateProfilLoading"]),
+    ...mapState("user", ["userProfile", "updateProfilLoading"]),
   },
   methods: {
     updateProfile() {
-      this.$store.dispatch("account/updateProfile", {
+      this.$store.dispatch("user/updateProfile", {
         name: this.name !== "" ? this.name : this.userProfile.name,
         email: this.email !== "" ? this.email : this.userProfile.email,
         avatar: this.userProfile.avatar,

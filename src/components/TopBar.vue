@@ -49,7 +49,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("account", ["userProfile"]),
+    ...mapState("user", ["userProfile"]),
   },
 };
 </script>

@@ -196,7 +196,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["userProfile"]),
+    ...mapState("user", ["userProfile"]),
     ...mapState("platforms", ["platformsList"]),
     ...mapGetters("accounts", ["account"]),
     isCreateMode() {

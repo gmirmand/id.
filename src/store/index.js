@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import account from "./account";
+import user from "./user";
 import accounts from "./accounts";
 import alerts from "./alerts";
 import platforms from "./platforms";
@@ -14,7 +14,7 @@ export default new Vuex.Store({
   actions: {},
   getters: {},
   modules: {
-    account,
+    user,
     accounts,
     alerts,
     platforms,

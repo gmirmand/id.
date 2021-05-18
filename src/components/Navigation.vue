@@ -66,11 +66,11 @@ export default {
     },
     logout() {
       this.$emit("close");
-      this.$store.dispatch("account/logout");
+      this.$store.dispatch("user/logout");
     },
   },
   computed: {
-    ...mapState("account", ["userProfile"]),
+    ...mapState("user", ["userProfile"]),
   },
 };
 </script>

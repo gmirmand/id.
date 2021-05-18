@@ -95,7 +95,7 @@ export default {
     Avataaars,
   },
   computed: {
-    ...mapState("account", ["userProfile"]),
+    ...mapState("user", ["userProfile"]),
   },
 };
 </script>

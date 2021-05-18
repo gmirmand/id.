@@ -37,7 +37,7 @@ const accounts = {
   getters: {
     personalAccounts: (state, getters, rootState) => {
       return state.accountsList?.filter(
-        (account) => account.ownerUid === rootState.account.userProfile.uid
+        (account) => account.ownerUid === rootState.user.userProfile.uid
       );
     },
     account: (state) => (id) => {

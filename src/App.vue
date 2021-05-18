@@ -27,7 +27,7 @@ export default {
   },
   components: { Alerts, TopBar, Navigation },
   computed: {
-    ...mapState("account", ["userProfile"]),
+    ...mapState("user", ["userProfile"]),
   },
   methods: {
     toggle(value) {

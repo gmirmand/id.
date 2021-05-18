@@ -5,7 +5,7 @@ import router from "../router/index";
 
 Vue.use(Vuex);
 
-const account = {
+const user = {
   namespaced: true,
   state: {
     userProfile: null,
@@ -66,8 +66,6 @@ const account = {
       await fb.auth
         .createUserWithEmailAndPassword(form.email, form.password)
         .then(async ({ user }) => {
-          commit("setLoginLoading", false);
-
           // create user profile object in userCollections
           await fb.usersCollection.doc(user.uid).set({
             name: form.name,
@@ -87,6 +85,7 @@ const account = {
             { root: true }
           );
         });
+      commit("setLoginLoading", false);
     },
     async logout({ commit }) {
       await fb.auth.signOut();
@@ -125,8 +124,6 @@ const account = {
           );
         });
       commit("setUpdateProfilLoading", false);
-
-      dispatch("fetchUserProfile", { uid: userUid });
     },
     async updateAvatar({ commit, state }, asset) {
       const userUid = fb.auth.currentUser.uid;
@@ -140,4 +137,4 @@ const account = {
   },
 };
 
-export default account;
+export default user;
