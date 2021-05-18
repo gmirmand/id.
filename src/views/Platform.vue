@@ -233,6 +233,8 @@ export default {
   methods: {
     async updatePlatformInfos() {},
     async createPlatform() {
+      const ref = fb.accountsCollection.doc();
+
       const subLogin = i18nTranslateFr(
         this.platformSubLogin,
         this.userProfile.uid
@@ -250,7 +252,6 @@ export default {
         accountObj.logo = this.platform.logo;
       }
 
-      const ref = fb.accountsCollection.doc();
       await ref.set(accountObj).then(() => {
         this.$router.push({ name: "Platform", params: { id: ref.id } });
       });
@@ -261,7 +262,7 @@ export default {
       });
     },
     autocompleteValues() {
-      if (!this.isCreateMode) {
+      if (!this.isCreateMode && this.accountObj) {
         this.platformValue = this.accountObj.name;
         this.platformDescription = this.accountObj.description;
         this.platformLogin = this.accountObj.login;
