@@ -4,29 +4,37 @@
       {{ !shared ? "Vos comptes" : "Comptes partagés" }}
     </v-subheader>
 
-    <v-list-item
-      v-for="account of accounts"
-      :to="`/platform/${account.id}`"
-      link
-      :key="account.id"
-      class="dashboard-list__item"
+    <template v-if="accounts.length && accounts.length > 0">
+      <v-list-item
+        v-for="account of accounts"
+        :to="`/platform/${account.id}`"
+        link
+        :key="account.id"
+        class="dashboard-list__item"
+      >
+        <v-list-item-avatar class="mr-5 ml-1 overflow-visible">
+          <PlatformAvatar :platform="account" />
+        </v-list-item-avatar>
+
+        <v-list-item-content>
+          <v-list-item-title v-text="account.name"></v-list-item-title>
+
+          <v-list-item-subtitle
+            v-text="personal ? 'Vous' : account.owner.name"
+          ></v-list-item-subtitle>
+        </v-list-item-content>
+
+        <v-list-item-action>
+          <DashboardPlay :platform-id="1" />
+        </v-list-item-action>
+      </v-list-item>
+    </template>
+    <div
+      v-else
+      class="pa-3 pb-1 grey--text darken-3--text text-caption text-center"
     >
-      <v-list-item-avatar class="mr-5 ml-1 overflow-visible">
-        <PlatformAvatar :platform="account" />
-      </v-list-item-avatar>
-
-      <v-list-item-content>
-        <v-list-item-title v-text="account.name"></v-list-item-title>
-
-        <v-list-item-subtitle
-          v-text="personal ? 'Vous' : account.owner.name"
-        ></v-list-item-subtitle>
-      </v-list-item-content>
-
-      <v-list-item-action>
-        <DashboardPlay :platform-id="1" />
-      </v-list-item-action>
-    </v-list-item>
+      Aucun compte
+    </div>
   </v-list>
 </template>
 
