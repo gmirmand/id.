@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import * as fb from "../firebase";
+import router from "../router/index";
+import { sendError } from "../helpers/errors";
 
 Vue.use(Vuex);
 
@@ -30,6 +32,48 @@ const accounts = {
             accounts.push({ ...doc.data(), id: doc.id });
           });
           commit("setAccounts", accounts);
+        });
+      commit("setAccountsLoading", false);
+    },
+    async updateAccount({ dispatch, commit }, account) {
+      commit("setAccountsLoading", true);
+
+      const doc = fb.accountsCollection.doc(account.id);
+      await doc
+        .update(account)
+        .then(() => {
+          dispatch(
+            "alerts/pushSuccessAlert",
+            {
+              message: "Compte mis à jour avec succès ! Bien joué bg",
+            },
+            { root: true }
+          );
+        })
+        .catch((err) => {
+          sendError(err);
+        });
+      commit("setAccountsLoading", false);
+    },
+    async createAccount({ dispatch, commit }, account) {
+      commit("setAccountsLoading", true);
+
+      const doc = fb.accountsCollection.doc();
+      await doc
+        .set({ ...account, id: doc.id })
+        .then(() => {
+          router.push({ name: "Platform", params: { id: doc.id } });
+
+          dispatch(
+            "alerts/pushSuccessAlert",
+            {
+              message: "Compte créé avec succès ! Bien joué bg",
+            },
+            { root: true }
+          );
+        })
+        .catch((err) => {
+          sendError(err);
         });
       commit("setAccountsLoading", false);
     },

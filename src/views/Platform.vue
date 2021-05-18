@@ -1,12 +1,7 @@
 <template>
   <section v-if="loaded" class="platform">
     <v-card outlined shaped class="pa-3 platform__card" elevation="4">
-      <v-form
-        name="platformForm"
-        @submit.prevent="
-          isCreateMode ? createPlatform() : updatePlatformInfos()
-        "
-      >
+      <v-form name="platformForm" @submit.prevent="updatePlatformInfos">
         <v-card-subtitle class="d-flex">
           <div class="mr-3">
             <PlatformAvatar :platform="platform" />
@@ -175,7 +170,6 @@ import PlatformAvatar from "../components/Platform/PlatformAvatar";
 import Loading from "../components/Loading";
 import PlatformMembers from "@/components/Platform/PlatformMembers";
 import UserAvatar from "../components/Avatar/UserAvatar";
-import * as fb from "../firebase";
 import { i18nTranslateEn, i18nTranslateFr } from "../helpers/i18nTranslation";
 
 export default {
@@ -226,35 +220,32 @@ export default {
     this.autocompleteValues();
   },
   watch: {
-    account() {
+    accountObj() {
       this.autocompleteValues();
     },
   },
   methods: {
-    async updatePlatformInfos() {},
-    async createPlatform() {
-      const ref = fb.accountsCollection.doc();
-
+    updatePlatformInfos() {
       const subLogin = i18nTranslateFr(
         this.platformSubLogin,
         this.userProfile.uid
       );
 
-      const accountObj = {
-        ownerUid: this.userProfile.uid,
-        name: this.platform.name,
-        description: this.platformDescription,
-        login: this.platformLogin,
-        pwuid: subLogin,
-      };
+      const accountObj = this.accountObj || {};
+      accountObj.ownerUid = this.userProfile.uid;
+      accountObj.name = this.platform.name;
+      accountObj.description = this.platformDescription;
+      accountObj.login = this.platformLogin;
+      accountObj.pwuid = subLogin;
 
       if (this.platform.logo) {
         accountObj.logo = this.platform.logo;
       }
 
-      await ref.set(accountObj).then(() => {
-        this.$router.push({ name: "Platform", params: { id: ref.id } });
-      });
+      this.$store.dispatch(
+        this.isCreateMode ? "accounts/createAccount" : "accounts/updateAccount",
+        accountObj
+      );
     },
     copySuccess(field) {
       this.$store.dispatch("alerts/pushSuccessAlert", {
