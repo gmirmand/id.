@@ -4,48 +4,49 @@
       'user-avatar',
       big && 'user-avatar--big',
       small && 'user-avatar--small',
+      xSmall && 'user-avatar--x-small',
     ]"
   >
     <div
-      v-if="userProfile"
+      v-if="computedUser"
       class="d-flex flex-column justify-center align-center"
     >
       <v-avatar class="user-avatar__avatar-wrapper">
         <LiveIcon v-if="live" active class="user-avatar__live" />
         <Avataaars
           class="user-avatar__avatar"
-          :accessoriesType="userProfile.avatar.accessoriesTypes"
-          :clotheType="userProfile.avatar.clotheTypes"
+          :accessoriesType="computedUser.avatar.accessoriesTypes"
+          :clotheType="computedUser.avatar.clotheTypes"
           :clotheColor="
-            userProfile.avatar.clotheColors &&
-            userProfile.avatar.clotheColors.id
+            computedUser.avatar.clotheColors &&
+            computedUser.avatar.clotheColors.id
           "
-          :eyebrowType="userProfile.avatar.eyebrowTypes"
-          :eyeType="userProfile.avatar.eyeTypes"
+          :eyebrowType="computedUser.avatar.eyebrowTypes"
+          :eyeType="computedUser.avatar.eyeTypes"
           :facialHairColor="
-            userProfile.avatar.facialHairColors &&
-            userProfile.avatar.facialHairColors.id
+            computedUser.avatar.facialHairColors &&
+            computedUser.avatar.facialHairColors.id
           "
-          :facialHairType="userProfile.avatar.facialHairTypes"
-          :graphicType="userProfile.avatar.GraphicShirtTypes"
+          :facialHairType="computedUser.avatar.facialHairTypes"
+          :graphicType="computedUser.avatar.GraphicShirtTypes"
           :hairColor="
-            userProfile.avatar.hairColors && userProfile.avatar.hairColors.id
+            computedUser.avatar.hairColors && computedUser.avatar.hairColors.id
           "
-          :mouthType="userProfile.avatar.mouthTypes"
+          :mouthType="computedUser.avatar.mouthTypes"
           :skinColor="
-            userProfile.avatar.skinColors && userProfile.avatar.skinColors.id
+            computedUser.avatar.skinColors && computedUser.avatar.skinColors.id
           "
-          :topType="userProfile.avatar.topTypes"
+          :topType="computedUser.avatar.topTypes"
           :topColor="
-            userProfile.avatar.topColors && userProfile.avatar.topColors.id
+            computedUser.avatar.topColors && computedUser.avatar.topColors.id
           "
         />
       </v-avatar>
       <span v-if="showName" class="user-avatar__name text-caption text-center">
-        {{ userProfile.name }}
+        {{ computedUser.name }}
       </span>
       <span
-        v-if="highlight"
+        v-if="computedUser === userProfile && showHighlight"
         class="user-avatar__owner text-caption text-center yellow--text"
       >
         Propriétaire
@@ -64,9 +65,17 @@ import LiveIcon from "../LiveIcon";
 export default {
   name: "UserAvatar",
   props: {
-    userUid: {
-      type: Number,
+    user: {
+      type: Object,
       default: undefined,
+    },
+    showHighlight: {
+      type: Boolean,
+      default: false,
+    },
+    xSmall: {
+      type: Boolean,
+      default: false,
     },
     small: {
       type: Boolean,
@@ -84,10 +93,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    highlight: {
-      type: Boolean,
-      default: false,
-    },
   },
   components: {
     LiveIcon,
@@ -96,6 +101,9 @@ export default {
   },
   computed: {
     ...mapState("user", ["userProfile"]),
+    computedUser() {
+      return this.user || this.userProfile;
+    },
   },
 };
 </script>
@@ -142,6 +150,16 @@ export default {
         width: 3em !important;
         min-width: 3em !important;
         height: 3em !important;
+      }
+    }
+  }
+
+  &--x-small {
+    #{$this} {
+      &__avatar-wrapper {
+        width: 2em !important;
+        min-width: 2em !important;
+        height: 2em !important;
       }
     }
   }

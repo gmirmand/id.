@@ -10,6 +10,7 @@ const user = {
   namespaced: true,
   state: {
     userProfile: null,
+    usersList: null,
     loginLoading: false,
     signupLoading: false,
     updateProfilLoading: false,
@@ -21,11 +22,11 @@ const user = {
     setLoginLoading(state, val) {
       state.loginLoading = val;
     },
-    setSignupLoading(state, val) {
-      state.signupLoading = val;
-    },
     setUpdateProfilLoading(state, val) {
       state.updateProfilLoading = val;
+    },
+    setUsers(state, val) {
+      state.usersList = val;
     },
   },
   actions: {
@@ -130,6 +131,18 @@ const user = {
       commit("setUpdateProfilLoading", true);
       await fb.usersCollection.doc(userUid).update(user);
       commit("setUpdateProfilLoading", false);
+    },
+    async fetchUsers({ commit, state }) {
+      await fb.usersCollection
+        .where("uid", "!=", state.userProfile.uid)
+        .get()
+        .then((query) => {
+          let users = [];
+          query.forEach((doc) => {
+            users.push({ ...doc.data(), id: doc.id });
+          });
+          commit("setUsers", users);
+        });
     },
   },
 };
