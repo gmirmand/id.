@@ -3,7 +3,7 @@
     <DashboardList personal class="mb-6" :accounts="personalAccounts" />
 
     <div class="d-flex justify-center mt-2 mb-6">
-      <v-btn class="mx-2" fab elevation="6">
+      <v-btn :to="{ name: 'AddPlatform' }" class="mx-2" fab elevation="6">
         <v-icon dark> mdi-plus </v-icon>
       </v-btn>
     </div>
