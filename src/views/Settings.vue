@@ -93,10 +93,6 @@ export default {
 
       this.name = "";
       this.email = "";
-
-      this.$store.dispatch("alerts/pushSuccessAlert", {
-        message: "Profil mis à jour avec succès ! Bien joué bg",
-      });
     },
   },
 };

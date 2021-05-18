@@ -99,11 +99,31 @@ const account = {
       const userUid = fb.auth.currentUser.uid;
       // update user object
       commit("setUpdateProfilLoading", true);
-      await fb.usersCollection.doc(userUid).update({
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-      });
+      await fb.usersCollection
+        .doc(userUid)
+        .update({
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+        })
+        .then(() => {
+          dispatch(
+            "alerts/pushSuccessAlert",
+            {
+              message: "Profil mis à jour avec succès ! Bien joué bg",
+            },
+            { root: true }
+          );
+        })
+        .catch((err) => {
+          dispatch(
+            "alerts/pushErrorAlert",
+            {
+              message: err.message,
+            },
+            { root: true }
+          );
+        });
       commit("setUpdateProfilLoading", false);
 
       dispatch("fetchUserProfile", { uid: userUid });
