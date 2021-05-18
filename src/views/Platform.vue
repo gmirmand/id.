@@ -9,7 +9,7 @@
       >
         <v-card-subtitle class="d-flex">
           <div class="mr-3">
-            <PlatformAvatar :platform="accountObj" />
+            <PlatformAvatar :platform="platform" />
           </div>
           <div v-if="!editMode">
             <div class="text-h3">{{ accountObj.name }}</div>
@@ -57,6 +57,7 @@
               name="input-sub-login"
               label="Mot de passe"
               counter
+              autocomplete="new-password"
               @click:append="show = !show"
             ></v-text-field>
             <v-btn type="submit" class="mb-3" v-if="!isCreateMode">
@@ -211,9 +212,11 @@ export default {
       return this.platformsList?.map((platform) => platform.name);
     },
     platform() {
-      return this.platformsList?.find((platform) => {
-        return platform.id === this.platformValue?.value;
+      const predefinedPlatform = this.platformsList?.find((platform) => {
+        return platform.name === this.platformValue;
       });
+
+      return predefinedPlatform || { name: this.platformValue };
     },
     accountObj() {
       return this.account(this.$route.params.id);
@@ -235,16 +238,21 @@ export default {
         this.userProfile.uid
       );
 
+      const accountObj = {
+        ownerUid: this.userProfile.uid,
+        name: this.platform.name,
+        description: this.platformDescription,
+        login: this.platformLogin,
+        pwuid: subLogin,
+      };
+
+      if (this.platform.logo) {
+        accountObj.logo = this.platform.logo;
+      }
+
       await fb.accountsCollection
         .doc()
-        .set({
-          ownerUid: this.userProfile.uid,
-          name: this.platform.name,
-          description: this.platformDescription,
-          logo: this.platform.logo,
-          login: this.platformLogin,
-          pwuid: subLogin,
-        })
+        .set(accountObj)
         .then(() => {
           this.$router.push({ name: "Dashboard" });
         });
@@ -255,13 +263,15 @@ export default {
       });
     },
     autocompleteValues() {
-      this.platformValue = this.accountObj.name;
-      this.platformDescription = this.accountObj.description;
-      this.platformLogin = this.accountObj.login;
-      this.platformSubLogin = i18nTranslateEn(
-        this.accountObj.pwuid,
-        this.userProfile.uid
-      );
+      if (!this.isCreateMode) {
+        this.platformValue = this.accountObj.name;
+        this.platformDescription = this.accountObj.description;
+        this.platformLogin = this.accountObj.login;
+        this.platformSubLogin = i18nTranslateEn(
+          this.accountObj.pwuid,
+          this.userProfile.uid
+        );
+      }
     },
   },
 };

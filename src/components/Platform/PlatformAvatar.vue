@@ -1,7 +1,7 @@
 <template>
   <div :class="['platform-avatar']">
     <LiveIcon class="platform-avatar__status" active />
-    <div class="platform-avatar__avatar">
+    <div class="platform-avatar__avatar elevation-6">
       <transition name="fade">
         <avatar
           v-if="!platformLogo"
@@ -38,6 +38,7 @@ export default {
   },
   watch: {
     platform() {
+      this.platformLogo = undefined;
       this.getLogo();
     },
   },
@@ -71,6 +72,7 @@ export default {
     width: 48px;
     height: 48px;
     position: relative;
+    border-radius: 50%;
   }
 
   &__logo {
