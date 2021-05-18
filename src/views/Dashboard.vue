@@ -1,6 +1,6 @@
 <template>
   <section class="dashboard">
-    <DashboardList personal class="mb-6" :accounts="personalAccounts" />
+    <DashboardList personal class="mb-6" :accounts="personalAccountsList" />
 
     <div class="d-flex justify-center mt-2 mb-6">
       <v-btn :to="{ name: 'AddAccount' }" class="mx-2" fab elevation="6">
@@ -8,18 +8,18 @@
       </v-btn>
     </div>
 
-    <DashboardList shared />
+    <DashboardList shared :accounts="sharedAccountsList" />
   </section>
 </template>
 
 <script>
 import DashboardList from "../components/Dashboard/DashboardList";
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   components: { DashboardList },
   computed: {
-    ...mapGetters("accounts", ["personalAccounts"]),
+    ...mapState("accounts", ["personalAccountsList", "sharedAccountsList"]),
   },
   methods: {},
 };

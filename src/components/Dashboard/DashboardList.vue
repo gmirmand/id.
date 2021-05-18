@@ -1,7 +1,7 @@
 <template>
   <v-list class="dashboard-list" elevation="4">
     <v-subheader :class="['white--text primary']">
-      {{ !shared ? "Vos comptes" : "Comptes partagés" }}
+      {{ personal ? "Vos comptes" : "Comptes partagés" }}
     </v-subheader>
 
     <template v-if="accounts.length && accounts.length > 0">
@@ -18,9 +18,9 @@
 
         <v-list-item-content>
           <v-list-item-title v-text="account.name"></v-list-item-title>
-
           <v-list-item-subtitle
-            v-text="personal ? 'Vous' : account.owner.name"
+            v-if="account.owner || personal"
+            v-text="personal ? 'Vous' : getFullUser(account.owner)"
           ></v-list-item-subtitle>
         </v-list-item-content>
 
@@ -44,6 +44,7 @@ import LiveIcon from "../LiveIcon";
 import AccountAvatar from "../Account/AccountAvatar";
 import { mapState } from "vuex";
 import Loading from "../Loading";
+import { getFullUser } from "../../helpers/user";
 
 export default {
   name: "DashboardList",
@@ -58,12 +59,15 @@ export default {
     },
     personal: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     shared: {
       type: Boolean,
       default: false,
     },
+  },
+  methods: {
+    getFullUser,
   },
 };
 </script>

@@ -9,12 +9,16 @@ Vue.use(Vuex);
 const accounts = {
   namespaced: true,
   state: {
-    accountsList: undefined,
+    personalAccountsList: undefined,
+    sharedAccountsList: undefined,
     accountsLoading: false,
   },
   mutations: {
-    setAccounts(state, val) {
-      state.accountsList = val;
+    setPersonalAccounts(state, val) {
+      state.personalAccountsList = val;
+    },
+    setSharedAccounts(state, val) {
+      state.sharedAccountsList = val;
     },
     setAccountsLoading(state, val) {
       state.accountsLoading = val;
@@ -31,8 +35,18 @@ const accounts = {
           querySnapshot.forEach((doc) => {
             accounts.push({ ...doc.data(), id: doc.id });
           });
-          commit("setAccounts", accounts);
+          commit("setPersonalAccounts", accounts);
         });
+      await fb.accountsCollection
+        .where("members", "array-contains", user?.uid)
+        .onSnapshot((querySnapshot) => {
+          let accounts = [];
+          querySnapshot.forEach((doc) => {
+            accounts.push({ ...doc.data(), id: doc.id });
+          });
+          commit("setSharedAccounts", accounts);
+        });
+
       commit("setAccountsLoading", false);
     },
     async updateAccount({ dispatch, commit }, account) {
@@ -79,13 +93,11 @@ const accounts = {
     },
   },
   getters: {
-    personalAccounts: (state, getters, rootState) => {
-      return state.accountsList?.filter(
-        (account) => account.ownerUid === rootState.user.userProfile.uid
-      );
+    allAccounts: (state) => {
+      return state.personalAccountsList?.concat(state.sharedAccountsList);
     },
-    account: (state) => (id) => {
-      return state.accountsList?.find((account) => account.id === id);
+    account: (state, getters) => (id) => {
+      return getters.allAccounts?.find((account) => account.id === id);
     },
   },
 };

@@ -197,7 +197,7 @@ export default {
       return this.$route.name === "AddAccount";
     },
     editMode() {
-      return this.userProfile.uid === this.userProfile.uid;
+      return this.userProfile.uid === this.accountSaved.ownerUid;
     },
     loaded() {
       return this.userProfile && (this.accountSaved || this.isCreateMode);
@@ -259,7 +259,7 @@ export default {
         this.accountLogin = this.accountSaved.login;
         this.accountSubLogin = i18nTranslateEn(
           this.accountSaved.pwuid,
-          this.userProfile.uid
+          this.editMode ? this.userProfile.uid : this.accountSaved.ownerUid
         );
       }
     },
