@@ -23,6 +23,7 @@ const auth = firebase.auth();
 const usersCollection = db.collection("users");
 const platformsCollection = db.collection("platforms");
 const accountsCollection = db.collection("accounts");
+const errorsCollection = db.collection("errors");
 
 // storage
 const storage = firebase.storage();
@@ -36,5 +37,6 @@ export {
   usersCollection,
   platformsCollection,
   accountsCollection,
+  errorsCollection,
   storagePlatformsLogos,
 };

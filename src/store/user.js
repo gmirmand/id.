@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import * as fb from "../firebase";
 import router from "../router/index";
+import { sendError } from "../helpers/errors";
 
 Vue.use(Vuex);
 
@@ -77,13 +78,7 @@ const user = {
           dispatch("fetchUserProfile", user);
         })
         .catch((err) => {
-          dispatch(
-            "alerts/pushErrorAlert",
-            {
-              message: err.message,
-            },
-            { root: true }
-          );
+          sendError(err);
         });
       commit("setLoginLoading", false);
     },
@@ -115,6 +110,8 @@ const user = {
           );
         })
         .catch((err) => {
+          sendError(err);
+
           dispatch(
             "alerts/pushErrorAlert",
             {

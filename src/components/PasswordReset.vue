@@ -41,6 +41,7 @@
 <script>
 import { auth } from "@/firebase";
 import veeValidate from "@/mixins/veeValidate";
+import { sendError } from "../helpers/errors";
 
 export default {
   mixins: [veeValidate],
@@ -49,18 +50,15 @@ export default {
       dialog: false,
       email: "",
       showSuccess: false,
-      errorMsg: "",
     };
   },
   methods: {
     async resetPassword() {
-      this.errorMsg = "";
-
       try {
         await auth.sendPasswordResetEmail(this.email);
         this.dialog = false;
       } catch (err) {
-        this.errorMsg = err.message;
+        sendError(err);
       }
     },
   },
