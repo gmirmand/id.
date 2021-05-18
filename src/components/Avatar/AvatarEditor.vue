@@ -221,8 +221,8 @@ export default {
   },
   watch: {
     userProfile(val) {
-      if (!val.avatar) {
-        this.$store.dispatch("account/updateProfile", {
+      if (val && !val.avatar) {
+        this.$store.dispatch("user/updateProfile", {
           ...val,
           avatar: this.generateRandomAvatar(),
         });
