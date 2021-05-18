@@ -30,16 +30,16 @@ const routes = [
     },
   },
   {
-    path: "/platform/:id",
-    name: "Platform",
+    path: "/account/:id",
+    name: "Account",
     component: () =>
-      import(/* webpackChunkName: "platform" */ "../views/Platform.vue"),
+      import(/* webpackChunkName: "account" */ "../views/Account.vue"),
   },
   {
-    path: "/add-platform",
-    name: "AddPlatform",
+    path: "/add-account",
+    name: "AddAccount",
     component: () =>
-      import(/* webpackChunkName: "add-platform" */ "../views/Platform.vue"),
+      import(/* webpackChunkName: "add-account" */ "../views/Account.vue"),
   },
 ];
 

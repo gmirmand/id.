@@ -62,7 +62,7 @@ const accounts = {
       await doc
         .set({ ...account, id: doc.id })
         .then(() => {
-          router.push({ name: "Platform", params: { id: doc.id } });
+          router.push({ name: "Account", params: { id: doc.id } });
 
           dispatch(
             "alerts/pushSuccessAlert",

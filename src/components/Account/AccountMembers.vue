@@ -1,7 +1,7 @@
 <template>
   <v-card-text>
-    <div class="platform-members__title mb-3">Membres</div>
-    <div class="platform-members__list d-flex flex-wrap">
+    <div class="account-members__title mb-3">Membres</div>
+    <div class="account-members__list d-flex flex-wrap">
       <UserAvatar
         small
         live
@@ -14,11 +14,11 @@
       <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
       <UserAvatar small show-name :user-id="1" class="mr-2 mb-2" />
 
-      <div class="platform-members__add">
-        <v-avatar color="grey darken-3" class="platform-members__add">
+      <div class="account-members__add">
+        <v-avatar color="grey darken-3" class="account-members__add">
           <v-icon dark> mdi-account-circle </v-icon>
         </v-avatar>
-        <v-icon color="grey darken-1" dark class="platform-members__plus-icon">
+        <v-icon color="grey darken-1" dark class="account-members__plus-icon">
           mdi-plus-circle
         </v-icon>
       </div>
@@ -29,13 +29,13 @@
 <script>
 import UserAvatar from "@/components/Avatar/UserAvatar";
 export default {
-  name: "PlatformMembers",
+  name: "AccountMembers",
   components: { UserAvatar },
 };
 </script>
 
 <style scoped lang="scss">
-.platform-members {
+.account-members {
   &__add {
     position: relative;
   }

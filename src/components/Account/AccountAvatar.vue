@@ -1,14 +1,14 @@
 <template>
-  <div :class="['platform-avatar']">
-    <LiveIcon class="platform-avatar__status" active />
-    <div class="platform-avatar__avatar elevation-6">
+  <div :class="['account-avatar']">
+    <LiveIcon class="account-avatar__status" active />
+    <div class="account-avatar__avatar elevation-6">
       <transition name="fade">
         <avatar
-          v-if="!platformLogo"
-          :fullname="platform ? platform.name : 'ツ'"
-          class="platform-avatar__generated-img"
+          v-if="!accountLogo"
+          :fullname="account ? account.name : 'ツ'"
+          class="account-avatar__generated-img"
         />
-        <img v-else :src="platformLogo" alt="" class="platform-avatar__logo" />
+        <img v-else :src="accountLogo" alt="" class="account-avatar__logo" />
       </transition>
     </div>
   </div>
@@ -20,15 +20,15 @@ import Avatar from "vue-avatar-component";
 import { storagePlatformsLogos } from "../../firebase";
 
 export default {
-  name: "PlatformAvatar",
+  name: "AccountAvatar",
   data() {
     return {
-      platformLogo: undefined,
+      accountLogo: undefined,
     };
   },
   components: { LiveIcon, Avatar },
   props: {
-    platform: {
+    account: {
       type: Object,
       default: undefined,
     },
@@ -37,19 +37,19 @@ export default {
     this.getLogo();
   },
   watch: {
-    platform() {
-      this.platformLogo = undefined;
+    account() {
+      this.accountLogo = undefined;
       this.getLogo();
     },
   },
   methods: {
     getLogo() {
-      if (this.platform?.logo) {
+      if (this.account?.logo) {
         storagePlatformsLogos
-          .child(this.platform.logo)
+          .child(this.account.logo)
           .getDownloadURL()
           .then((url) => {
-            this.platformLogo = url;
+            this.accountLogo = url;
           });
       }
     },
@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.platform-avatar {
+.account-avatar {
   position: relative;
 
   &__status {

@@ -1,18 +1,18 @@
 <template>
-  <section v-if="loaded" class="platform">
-    <v-card outlined shaped class="pa-3 platform__card" elevation="4">
-      <v-form name="platformForm" @submit.prevent="updatePlatformInfos">
+  <section v-if="loaded" class="account">
+    <v-card outlined shaped class="pa-3 account__card" elevation="4">
+      <v-form name="accountForm" @submit.prevent="updatePlatformInfos">
         <v-card-subtitle class="d-flex">
           <div class="mr-3">
-            <PlatformAvatar :platform="platform" />
+            <AccountAvatar :account="accountNotSaved" />
           </div>
           <div v-if="!editMode">
-            <div class="text-h3">{{ accountObj.name }}</div>
-            <div class="text-subtitle">{{ platformDescription }}</div>
+            <div class="text-h3">{{ accountSaved.name }}</div>
+            <div class="text-subtitle">{{ accountDescription }}</div>
           </div>
           <div v-else>
             <v-combobox
-              v-model="platformValue"
+              v-model="accountValue"
               :items="platformsMap"
               label="Plateforme"
               class="mb-3"
@@ -21,15 +21,15 @@
               dense
               auto-grow
               rows="1"
-              name="platform-informations"
+              name="account-informations"
               label="Informations"
-              v-model="platformDescription"
+              v-model="accountDescription"
             ></v-textarea>
 
             <v-btn v-if="!isCreateMode" type="submit"> Mettre à jour </v-btn>
           </div>
           <div
-            class="platform__play align-self-center ml-auto"
+            class="account__play align-self-center ml-auto"
             v-if="!isCreateMode"
           >
             <DashboardPlay :platform-id="1" button />
@@ -37,16 +37,16 @@
         </v-card-subtitle>
         <v-divider />
 
-        <div class="platform__ids pt-4 pb-2">
-          <div v-if="editMode" class="platform__ids-editor">
+        <div class="account__ids pt-4 pb-2">
+          <div v-if="editMode" class="account__ids-editor">
             <v-text-field
-              v-model="platformLogin"
+              v-model="accountLogin"
               type="text"
               name="input-login"
               label="Identifiant"
             ></v-text-field>
             <v-text-field
-              v-model="platformSubLogin"
+              v-model="accountSubLogin"
               :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
               :type="show ? 'text' : 'password'"
               name="input-sub-login"
@@ -59,12 +59,12 @@
               Mettre à jour
             </v-btn>
           </div>
-          <div v-else class="platform__ids-infos">
+          <div v-else class="account__ids-infos">
             <v-btn
               class="pa-3 mb-3 mr-3"
               rounded
               small
-              v-clipboard:copy="platformLogin"
+              v-clipboard:copy="accountLogin"
               v-clipboard:success="() => copySuccess('Identifiant')"
             >
               <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
@@ -74,14 +74,14 @@
               class="pa-3 mb-3"
               rounded
               small
-              v-clipboard:copy="platformSubLogin"
+              v-clipboard:copy="accountSubLogin"
               v-clipboard:success="() => copySuccess('Mot de passe')"
             >
               <v-icon dark small class="mr-2"> mdi-content-copy </v-icon>
               Mot de passe
             </v-btn>
           </div>
-          <span class="platform__edited text-caption" v-if="!isCreateMode">
+          <span class="account__edited text-caption" v-if="!isCreateMode">
             Dernière modification Mardi 02 Mai 2021 à 18h59
           </span>
         </div>
@@ -95,10 +95,10 @@
 
       <v-divider v-if="!isCreateMode" />
 
-      <PlatformMembers v-if="!isCreateMode" />
+      <AccountMembers v-if="!isCreateMode" :account="accountSaved" />
     </v-card>
 
-    <div class="platform__activity pa-3" v-if="!isCreateMode">
+    <div class="account__activity pa-3" v-if="!isCreateMode">
       <div class="text-subtitle-h3 text-center mb-3 mt-6">Activités</div>
       <v-divider />
       <v-list three-line>
@@ -158,34 +158,34 @@
       </v-list>
     </div>
   </section>
-  <section v-else class="platform d-flex align-center justify-center">
+  <section v-else class="account d-flex align-center justify-center">
     <Loading />
   </section>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import DashboardPlay from "../components/Dashboard/DashboardPlay";
-import PlatformAvatar from "../components/Platform/PlatformAvatar";
-import Loading from "../components/Loading";
-import PlatformMembers from "@/components/Platform/PlatformMembers";
-import UserAvatar from "../components/Avatar/UserAvatar";
+import DashboardPlay from "@/components/Dashboard/DashboardPlay";
+import AccountAvatar from "@/components/Account/AccountAvatar";
+import Loading from "@/components/Loading";
+import AccountMembers from "@/components/Account/AccountMembers";
+import UserAvatar from "@/components/Avatar/UserAvatar";
 import { i18nTranslateEn, i18nTranslateFr } from "../helpers/i18nTranslation";
 
 export default {
   components: {
     UserAvatar,
-    PlatformMembers,
+    AccountMembers,
     Loading,
-    PlatformAvatar,
+    AccountAvatar,
     DashboardPlay,
   },
   data() {
     return {
-      platformValue: undefined,
-      platformDescription: undefined,
-      platformLogin: undefined,
-      platformSubLogin: undefined,
+      accountValue: undefined,
+      accountDescription: undefined,
+      accountLogin: undefined,
+      accountSubLogin: undefined,
       show: false,
     };
   },
@@ -194,25 +194,25 @@ export default {
     ...mapState("platforms", ["platformsList"]),
     ...mapGetters("accounts", ["account"]),
     isCreateMode() {
-      return this.$route.name === "AddPlatform";
+      return this.$route.name === "AddAccount";
     },
     editMode() {
       return this.userProfile.uid === this.userProfile.uid;
     },
     loaded() {
-      return this.userProfile && (this.accountObj || this.isCreateMode);
+      return this.userProfile && (this.accountSaved || this.isCreateMode);
     },
     platformsMap() {
       return this.platformsList?.map((platform) => platform.name);
     },
-    platform() {
+    accountNotSaved() {
       const predefinedPlatform = this.platformsList?.find((platform) => {
-        return platform.name === this.platformValue;
+        return platform.name === this.accountValue;
       });
 
-      return predefinedPlatform || { name: this.platformValue };
+      return predefinedPlatform || { name: this.accountValue };
     },
-    accountObj() {
+    accountSaved() {
       return this.account(this.$route.params.id);
     },
   },
@@ -220,31 +220,31 @@ export default {
     this.autocompleteValues();
   },
   watch: {
-    accountObj() {
+    accountSaved() {
       this.autocompleteValues();
     },
   },
   methods: {
     updatePlatformInfos() {
       const subLogin = i18nTranslateFr(
-        this.platformSubLogin,
+        this.accountSubLogin,
         this.userProfile.uid
       );
 
-      const accountObj = this.accountObj || {};
-      accountObj.ownerUid = this.userProfile.uid;
-      accountObj.name = this.platform.name;
-      accountObj.description = this.platformDescription;
-      accountObj.login = this.platformLogin;
-      accountObj.pwuid = subLogin;
+      const account = this.accountSaved || {};
+      account.ownerUid = this.userProfile.uid;
+      account.name = this.accountNotSaved.name;
+      account.description = this.accountDescription;
+      account.login = this.accountLogin;
+      account.pwuid = subLogin;
 
-      if (this.platform.logo) {
-        accountObj.logo = this.platform.logo;
+      if (this.accountNotSaved.logo) {
+        account.logo = this.accountNotSaved.logo;
       }
 
       this.$store.dispatch(
         this.isCreateMode ? "accounts/createAccount" : "accounts/updateAccount",
-        accountObj
+        account
       );
     },
     copySuccess(field) {
@@ -253,12 +253,12 @@ export default {
       });
     },
     autocompleteValues() {
-      if (!this.isCreateMode && this.accountObj) {
-        this.platformValue = this.accountObj.name;
-        this.platformDescription = this.accountObj.description;
-        this.platformLogin = this.accountObj.login;
-        this.platformSubLogin = i18nTranslateEn(
-          this.accountObj.pwuid,
+      if (!this.isCreateMode && this.accountSaved) {
+        this.accountValue = this.accountSaved.name;
+        this.accountDescription = this.accountSaved.description;
+        this.accountLogin = this.accountSaved.login;
+        this.accountSubLogin = i18nTranslateEn(
+          this.accountSaved.pwuid,
           this.userProfile.uid
         );
       }
@@ -268,7 +268,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.platform {
+.account {
   &__card {
     position: relative;
   }

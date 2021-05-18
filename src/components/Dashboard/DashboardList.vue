@@ -7,13 +7,13 @@
     <template v-if="accounts.length && accounts.length > 0">
       <v-list-item
         v-for="account of accounts"
-        :to="`/platform/${account.id}`"
+        :to="{ name: 'Account', params: { id: account.id } }"
         link
         :key="account.id"
         class="dashboard-list__item"
       >
         <v-list-item-avatar class="mr-5 ml-1 overflow-visible">
-          <PlatformAvatar :platform="account" />
+          <AccountAvatar :account="account" />
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -41,13 +41,13 @@
 <script>
 import DashboardPlay from "./DashboardPlay";
 import LiveIcon from "../LiveIcon";
-import PlatformAvatar from "../Platform/PlatformAvatar";
+import AccountAvatar from "../Account/AccountAvatar";
 import { mapState } from "vuex";
 import Loading from "../Loading";
 
 export default {
   name: "DashboardList",
-  components: { Loading, PlatformAvatar, LiveIcon, DashboardPlay },
+  components: { Loading, AccountAvatar, LiveIcon, DashboardPlay },
   computed: {
     ...mapState("platforms", ["platformsList"]),
   },
