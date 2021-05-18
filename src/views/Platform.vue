@@ -250,12 +250,10 @@ export default {
         accountObj.logo = this.platform.logo;
       }
 
-      await fb.accountsCollection
-        .doc()
-        .set(accountObj)
-        .then(() => {
-          this.$router.push({ name: "Dashboard" });
-        });
+      const ref = fb.accountsCollection.doc();
+      await ref.set(accountObj).then(() => {
+        this.$router.push({ name: "Platform", params: { id: ref.id } });
+      });
     },
     copySuccess(field) {
       this.$store.dispatch("alerts/pushSuccessAlert", {
