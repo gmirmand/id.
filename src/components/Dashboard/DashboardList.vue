@@ -20,7 +20,15 @@
           <v-list-item-title v-text="account.name"></v-list-item-title>
           <v-list-item-subtitle
             v-if="account.owner || personal"
-            v-text="personal ? 'Vous' : getFullUser(account.owner)"
+            v-text="
+              personal
+                ? account.members && account.members.length > 0
+                  ? `Partagé avec ${account.members.length} personne${
+                      account.members.length > 1 ? 's' : ''
+                    }`
+                  : 'Non partagé'
+                : getFullUser(account.owner)
+            "
           ></v-list-item-subtitle>
         </v-list-item-content>
 
