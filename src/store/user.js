@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import * as fb from "../firebase";
 import router from "../router/index";
 import { sendError } from "../helpers/errors";
+import { usersCollection } from "../firebase";
 
 Vue.use(Vuex);
 
@@ -143,6 +144,11 @@ const user = {
           });
           commit("setUsers", users);
         });
+    },
+  },
+  getters: {
+    userReference(state) {
+      return state.userProfile && usersCollection.doc(state.userProfile.uid);
     },
   },
 };

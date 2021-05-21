@@ -3,7 +3,7 @@
     <div class="account-members__title mb-3">Membres</div>
     <div class="account-members__list d-flex flex-wrap" v-if="usersList">
       <v-autocomplete
-        v-if="userProfile.uid === account.ownerUid"
+        v-if="userProfile.uid === account.owner.uid"
         v-bind:value="membersObj"
         v-on:input="updateMembers"
         :items="usersList"
@@ -11,8 +11,9 @@
         chips
         multiple
         hide-details
-        item-text="members"
-        item-value="members"
+        item-text="users"
+        item-value="users"
+        no-data-text="Aucun compte trouvé"
       >
         <template v-slot:prepend-inner>
           <v-chip class="mt-3 mb-2 ml-0 mr-3">
@@ -56,9 +57,10 @@
 <script>
 import UserAvatar from "@/components/Avatar/UserAvatar";
 import { getUserId } from "../../helpers/user";
-import { mapState } from "vuex";
-import { accountsCollection } from "../../firebase";
+import { mapGetters, mapState } from "vuex";
+import { accountsCollection, usersCollection } from "../../firebase";
 import { sendError } from "../../helpers/errors";
+
 export default {
   name: "AccountMembers",
   components: { UserAvatar },
@@ -83,13 +85,15 @@ export default {
   methods: {
     getUserId,
     remove(user) {
-      this.updateMembers(this.members.filter((member) => member !== user.uid));
+      this.updateMembers(
+        this.members.filter((member) => member.uid !== user.uid)
+      );
     },
     updateMembers(members) {
       accountsCollection
         .doc(this.account.id)
         .update({
-          members: members.map((member) => member.uid),
+          members: members.map((member) => usersCollection.doc(member.uid)),
         })
         .catch((err) => sendError(err));
     },
@@ -101,9 +105,12 @@ export default {
   },
   computed: {
     ...mapState("user", ["usersList", "userProfile"]),
+    ...mapGetters("user", ["userReference"]),
     membersObj() {
       return this.usersList.filter((item) =>
-        this.members ? this.members.indexOf(item.uid) !== -1 : false
+        this.members
+          ? this.members.map((member) => member.uid).indexOf(item.uid) !== -1
+          : false
       );
     },
   },

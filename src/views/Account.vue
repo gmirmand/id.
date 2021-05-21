@@ -6,7 +6,7 @@
           <div class="mr-3">
             <AccountAvatar :account="accountNotSaved" />
           </div>
-          <div v-if="!editMode">
+          <div v-if="!editMode && !createMode">
             <div class="text-h3">{{ accountSaved.name }}</div>
             <div class="text-subtitle">{{ accountDescription }}</div>
           </div>
@@ -26,11 +26,11 @@
               v-model="accountDescription"
             ></v-textarea>
 
-            <v-btn v-if="!isCreateMode" type="submit"> Mettre à jour </v-btn>
+            <v-btn v-if="!createMode" type="submit"> Mettre à jour </v-btn>
           </div>
           <div
             class="account__play align-self-center ml-auto"
-            v-if="!isCreateMode"
+            v-if="!createMode"
           >
             <DashboardPlay :platform-id="1" button />
           </div>
@@ -38,7 +38,7 @@
         <v-divider />
 
         <div class="account__ids pt-4 pb-2">
-          <div v-if="editMode" class="account__ids-editor">
+          <div v-if="editMode || createMode" class="account__ids-editor">
             <v-text-field
               v-model="accountLogin"
               type="text"
@@ -55,7 +55,7 @@
               autocomplete="new-password"
               @click:append="show = !show"
             ></v-text-field>
-            <v-btn type="submit" class="mb-3" v-if="!isCreateMode">
+            <v-btn type="submit" class="mb-3" v-if="!createMode">
               Mettre à jour
             </v-btn>
           </div>
@@ -81,24 +81,24 @@
               Mot de passe
             </v-btn>
           </div>
-          <span class="account__edited text-caption" v-if="!isCreateMode">
+          <span class="account__edited text-caption" v-if="!createMode">
             Dernière modification Mardi 02 Mai 2021 à 18h59
           </span>
         </div>
 
         <div class="d-flex justify-center">
-          <v-btn type="submit" class="mb-3" color="primary" v-if="isCreateMode">
+          <v-btn type="submit" class="mb-3" color="primary" v-if="createMode">
             Ajouter la plateforme
           </v-btn>
         </div>
       </v-form>
 
-      <v-divider v-if="!isCreateMode" />
+      <v-divider v-if="!createMode" />
 
-      <AccountMembers v-if="!isCreateMode" :account="accountSaved" />
+      <AccountMembers v-if="!createMode" :account="accountSaved" />
     </v-card>
 
-    <div class="account__activity pa-3" v-if="!isCreateMode">
+    <div class="account__activity pa-3" v-if="!createMode">
       <div class="text-subtitle-h3 text-center mb-3 mt-6">Activités</div>
       <v-divider />
       <v-list three-line>
@@ -107,16 +107,7 @@
 
           <v-divider />
 
-          <v-list-item>
-            <user-avatar small class="mr-3" />
-            <v-list-item-content>
-              <v-list-item-title>Aujourd'hui à 18h59</v-list-item-title>
-              <v-list-item-subtitle>
-                {{ userProfile.name }} a réservé le compte pour XXX minutes
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
+          <v-list-item v-if="false">
             <user-avatar small class="mr-3" />
             <v-list-item-content>
               <v-list-item-title>Aujourd'hui à 18h59</v-list-item-title>
@@ -136,19 +127,10 @@
 
           <v-divider />
 
-          <v-list-item>
+          <v-list-item v-if="false">
             <user-avatar small class="mr-3" />
             <v-list-item-content>
               <v-list-item-title>Mardi 12 mars à 18h59</v-list-item-title>
-              <v-list-item-subtitle>
-                {{ userProfile.name }} a réservé le compte pour XXX minutes
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <user-avatar small class="mr-3" />
-            <v-list-item-content>
-              <v-list-item-title>Mercredi'hui 8 mars à 18h59</v-list-item-title>
               <v-list-item-subtitle>
                 {{ userProfile.name }} a réservé le compte pour XXX minutes
               </v-list-item-subtitle>
@@ -193,14 +175,18 @@ export default {
     ...mapState("user", ["userProfile"]),
     ...mapState("platforms", ["platformsList"]),
     ...mapGetters("accounts", ["account"]),
-    isCreateMode() {
+    ...mapGetters("user", ["userReference"]),
+    createMode() {
       return this.$route.name === "AddAccount";
     },
     editMode() {
-      return this.userProfile.uid === this.accountSaved.ownerUid;
+      return (
+        this.accountSaved &&
+        this.userProfile.uid === this.accountSaved.owner.uid
+      );
     },
     loaded() {
-      return this.userProfile && (this.accountSaved || this.isCreateMode);
+      return this.userProfile && (this.accountSaved || this.createMode);
     },
     platformsMap() {
       return this.platformsList?.map((platform) => platform.name);
@@ -232,7 +218,7 @@ export default {
       );
 
       const account = this.accountSaved || {};
-      account.ownerUid = this.userProfile.uid;
+      account.owner = this.userReference;
       account.name = this.accountNotSaved.name;
       account.description = this.accountDescription;
       account.login = this.accountLogin;
@@ -243,7 +229,7 @@ export default {
       }
 
       this.$store.dispatch(
-        this.isCreateMode ? "accounts/createAccount" : "accounts/updateAccount",
+        this.createMode ? "accounts/createAccount" : "accounts/updateAccount",
         account
       );
     },
@@ -253,13 +239,13 @@ export default {
       });
     },
     autocompleteValues() {
-      if (!this.isCreateMode && this.accountSaved) {
+      if (!this.createMode && this.accountSaved) {
         this.accountValue = this.accountSaved.name;
         this.accountDescription = this.accountSaved.description;
         this.accountLogin = this.accountSaved.login;
         this.accountSubLogin = i18nTranslateEn(
           this.accountSaved.pwuid,
-          this.editMode ? this.userProfile.uid : this.accountSaved.ownerUid
+          this.editMode ? this.userProfile.uid : this.accountSaved.owner.uid
         );
       }
     },

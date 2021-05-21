@@ -5,7 +5,7 @@
       <transition name="fade">
         <avatar
           v-if="!accountLogo"
-          :fullname="account ? account.name : 'ツ'"
+          :fullname="account && account.name ? account.name : 'ツ'"
           class="account-avatar__generated-img"
         />
         <img v-else :src="accountLogo" alt="" class="account-avatar__logo" />

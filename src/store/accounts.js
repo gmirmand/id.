@@ -3,14 +3,16 @@ import Vuex from "vuex";
 import * as fb from "../firebase";
 import router from "../router/index";
 import { sendError } from "../helpers/errors";
+import { usersCollection } from "../firebase";
+import { getAccountsSubProperty } from "../helpers/accounts";
 
 Vue.use(Vuex);
 
 const accounts = {
   namespaced: true,
   state: {
-    personalAccountsList: undefined,
-    sharedAccountsList: undefined,
+    personalAccountsList: [],
+    sharedAccountsList: [],
     accountsLoading: false,
   },
   mutations: {
@@ -29,21 +31,16 @@ const accounts = {
       // fetch accounts
       commit("setAccountsLoading", true);
       await fb.accountsCollection
-        .where("ownerUid", "==", user?.uid)
+        .where("owner", "==", usersCollection.doc(user.uid))
         .onSnapshot((querySnapshot) => {
-          let accounts = [];
-          querySnapshot.forEach((doc) => {
-            accounts.push({ ...doc.data(), id: doc.id });
-          });
+          const accounts = getAccountsSubProperty(querySnapshot);
           commit("setPersonalAccounts", accounts);
         });
+
       await fb.accountsCollection
-        .where("members", "array-contains", user?.uid)
+        .where("members", "array-contains", usersCollection.doc(user.uid))
         .onSnapshot((querySnapshot) => {
-          let accounts = [];
-          querySnapshot.forEach((doc) => {
-            accounts.push({ ...doc.data(), id: doc.id });
-          });
+          const accounts = getAccountsSubProperty(querySnapshot);
           commit("setSharedAccounts", accounts);
         });
 
@@ -94,7 +91,7 @@ const accounts = {
   },
   getters: {
     allAccounts: (state) => {
-      return state.personalAccountsList?.concat(state.sharedAccountsList);
+      return state.personalAccountsList.concat(state.sharedAccountsList);
     },
     account: (state, getters) => (id) => {
       return getters.allAccounts?.find((account) => account.id === id);

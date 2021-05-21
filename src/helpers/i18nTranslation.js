@@ -9,8 +9,8 @@ export const i18nTranslateEn = (message, language) => {
   return translation.toString(i18n.enc.Utf8);
 };
 
-export const i18nLanguage = (env) => {
-  const extract = env.match(/\d+/g)?.map(Number);
+export const i18nLanguage = (language) => {
+  const extract = language.match(/\d+/g)?.map(Number);
   const key = extract?.length > 0 && String(extract[0]).charAt(0);
   return key ? key.substring(0, 1) : "10";
 };
