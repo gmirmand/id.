@@ -11,8 +11,8 @@
         chips
         multiple
         hide-details
-        item-text="users"
-        item-value="users"
+        item-text="name"
+        return-object
         no-data-text="Aucun compte trouvé"
       >
         <template v-slot:prepend-inner>
