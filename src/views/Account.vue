@@ -98,7 +98,7 @@
       <AccountMembers v-if="!createMode" :account="accountSaved" />
     </v-card>
 
-    <div class="account__activity pa-3" v-if="!createMode">
+    <div class="account__activity pa-3" v-if="false">
       <div class="text-subtitle-h3 text-center mb-3 mt-6">Activités</div>
       <v-divider />
       <v-list three-line>
@@ -107,7 +107,7 @@
 
           <v-divider />
 
-          <v-list-item v-if="false">
+          <v-list-item>
             <user-avatar small class="mr-3" />
             <v-list-item-content>
               <v-list-item-title>Aujourd'hui à 18h59</v-list-item-title>
@@ -127,7 +127,7 @@
 
           <v-divider />
 
-          <v-list-item v-if="false">
+          <v-list-item>
             <user-avatar small class="mr-3" />
             <v-list-item-content>
               <v-list-item-title>Mardi 12 mars à 18h59</v-list-item-title>
