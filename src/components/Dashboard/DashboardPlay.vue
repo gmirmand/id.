@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn class="mx-2" fab color="primary" v-bind="attrs" v-on="on">
-        <v-icon dark large>mdi-play</v-icon>
+      <v-btn class="mx-2" small fab color="primary" v-bind="attrs" v-on="on">
+        <v-icon dark>mdi-play</v-icon>
       </v-btn>
     </template>
     <v-card>

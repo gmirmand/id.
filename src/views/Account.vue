@@ -3,8 +3,14 @@
     <v-card outlined shaped class="pa-3 account__card" elevation="4">
       <v-form name="accountForm" @submit.prevent="updatePlatformInfos">
         <v-card-subtitle class="d-flex">
-          <div class="mr-3">
+          <div class="mr-3 d-flex flex-column align-center">
             <AccountAvatar :account="accountNotSaved" />
+            <div
+              class="account__play align-self-center ml-auto mt-6"
+              v-if="editMode"
+            >
+              <DashboardPlay :account="accountSaved" button />
+            </div>
           </div>
           <div v-if="!editMode && !createMode">
             <div class="text-h3">{{ accountSaved.name }}</div>
@@ -26,13 +32,15 @@
               v-model="accountDescription"
             ></v-textarea>
 
-            <v-btn v-if="!createMode" type="submit"> Mettre à jour </v-btn>
+            <div class="d-flex align-center">
+              <v-btn v-if="!createMode" type="submit"> Mettre à jour </v-btn>
+            </div>
           </div>
           <div
             class="account__play align-self-center ml-auto"
-            v-if="!createMode"
+            v-if="!createMode && !editMode"
           >
-            <DashboardPlay :platform-id="1" button />
+            <DashboardPlay :account="accountSaved" button />
           </div>
         </v-card-subtitle>
         <v-divider />
@@ -257,13 +265,6 @@ export default {
 .account {
   &__card {
     position: relative;
-  }
-
-  &__play {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(50%, -50%);
   }
 }
 </style>
