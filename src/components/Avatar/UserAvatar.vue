@@ -11,7 +11,7 @@
       v-if="computedUser"
       class="d-flex flex-column justify-center align-center"
     >
-      <v-avatar class="user-avatar__avatar-wrapper">
+      <v-avatar class="user-avatar__avatar-wrapper mb-1">
         <LiveIcon v-if="live" active class="user-avatar__live" />
         <Avataaars
           class="user-avatar__avatar"

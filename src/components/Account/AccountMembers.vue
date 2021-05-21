@@ -50,6 +50,16 @@
           </template>
         </template>
       </v-autocomplete>
+      <div v-else class="account-members__list d-flex flex-wrap">
+        <UserAvatar showName small showHighlight />
+        <UserAvatar
+          v-for="user of usersList"
+          :user="user"
+          :key="user.uid"
+          showName
+          small
+        />
+      </div>
     </div>
   </v-card-text>
 </template>
