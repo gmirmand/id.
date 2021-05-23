@@ -38,3 +38,28 @@ export const skinColors = {
   DarkBrown: "#AE5D29",
   Black: "#614335",
 };
+
+export const circleColors = {
+  Crimson: "#e6194b",
+  ChateauGreen: "#3cb44b",
+  Broom: "#ffe119",
+  RoyalBlue: "#4363d8",
+  Jaffa: "#f58231",
+  Seance: "#911eb4",
+  TurquoiseBlue: "#46f0f0",
+  RazzleDazzleRose: "#f032e6",
+  LasPalmas: "#bcf60c",
+  ApricotPeach: "#fabebe",
+  Teal: "#008080",
+  Mauve: "#e6beff",
+  Kumera: "#9a6324",
+  LemonChiffon: "#fffac8",
+  Maroon: "#800000",
+  MintGreen: "#aaffc3",
+  Olive: "#808000",
+  Caramel: "#ffd8b1",
+  NavyBlue: "#000075",
+  Gray: "#808080",
+  White: "#ffffff",
+  Black: "#000000",
+};

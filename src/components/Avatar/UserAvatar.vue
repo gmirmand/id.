@@ -16,6 +16,7 @@
         <Avataaars
           class="user-avatar__avatar"
           :accessoriesType="computedUser.avatar.accessoriesTypes"
+          :circleColor="computedUser.avatar.circleColors.hex"
           :clotheType="computedUser.avatar.clotheTypes"
           :clotheColor="
             computedUser.avatar.clotheColors &&

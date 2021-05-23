@@ -29,6 +29,17 @@
       <v-container v-if="userProfile" class="d-flex flex-column align-center">
         <UserAvatar big class="avatar-editor__avatar mb-4" />
 
+        <v-swatches
+          class="avatar-editor__swatche"
+          :trigger-style="{ width: '32px', height: '32px' }"
+          row-length="4"
+          shapes="circles"
+          popover-x="right"
+          :swatches="Object.values(circleColors)"
+          :value="userProfile.avatar.circleColors.hex"
+          @input="updateColor({ id: 'circleColors', value: $event })"
+        />
+
         <v-expansion-panels class="avatar-editor__items" popout>
           <v-expansion-panel
             v-for="(asset, index) of assetsTypes"
@@ -125,6 +136,7 @@ import {
   hairColors,
   skinColors,
   hatAndShirtColors,
+  circleColors,
 } from "./assetsTypes/colors";
 import Loading from "../Loading";
 import { mapState } from "vuex";
@@ -148,11 +160,12 @@ export default {
       facialHairTypes: facialHairTypes,
       accessoriesTypes: accessoriesTypes,
       GraphicShirtTypes: GraphicShirtTypes,
-      skinColors: skinColors,
-      hairColors: hairColors,
       clotheColors: hatAndShirtColors,
-      facialHairColors: facialHairColors,
-      topColors: topColors,
+      skinColors,
+      hairColors,
+      facialHairColors,
+      topColors,
+      circleColors,
       assetsTypes: [
         {
           name: "Bouche",
@@ -237,6 +250,7 @@ export default {
       this.$store.dispatch("user/updateAvatar", asset);
     },
     updateColor(asset) {
+      console.log(asset);
       const assets = this[asset.id];
       const assetEntrie = Object.entries(assets).find(
         (a) => a[1] === asset.value
@@ -272,6 +286,7 @@ export default {
             id: randColorProperty,
           };
         });
+      randomAvatar;
       return randomAvatar;
     },
   },
