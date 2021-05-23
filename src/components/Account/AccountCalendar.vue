@@ -32,6 +32,7 @@
 <script>
 import AccountPlay from "./AccountPlay";
 import { add, getTime } from "date-fns";
+import { mapState } from "vuex";
 
 export default {
   name: "AccountCalendar",
@@ -71,6 +72,7 @@ export default {
     extendOriginal: null,
   }),
   computed: {
+    ...mapState("user", ["userProfile"]),
     formattedEvents() {
       return this.events?.map((event) => {
         event.name = this.getEventName(event);
@@ -97,8 +99,8 @@ export default {
     addDate(duration) {
       const startTime = this.roundTime(this.toTime(this.newDate));
       const endTime = getTime(add(new Date(startTime), { minutes: duration }));
-
       this.createEvent = {
+        userUid: this.userProfile.uid,
         start: startTime,
         end: endTime,
         timed: true,
@@ -127,7 +129,7 @@ export default {
     getEventColor(event) {
       const color =
         this.members.find((member) => member.uid === event.userUid)?.avatar
-          .circleColors.hex || this.$vuetify.theme.themes.dark.primary;
+          .circleColors.hex || this.userProfile.avatar.circleColors.hex;
       const rgb = parseInt(color.substring(1), 16);
       const r = (rgb >> 16) & 0xff;
       const g = (rgb >> 8) & 0xff;
@@ -138,7 +140,7 @@ export default {
     getEventName(event) {
       return (
         this.members.find((member) => member.uid === event.userUid)?.name ||
-        "Inconnu"
+        this.userProfile.name
       );
     },
     getEvents({ start, end }) {
