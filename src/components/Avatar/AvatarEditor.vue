@@ -250,7 +250,6 @@ export default {
       this.$store.dispatch("user/updateAvatar", asset);
     },
     updateColor(asset) {
-      console.log(asset);
       const assets = this[asset.id];
       const assetEntrie = Object.entries(assets).find(
         (a) => a[1] === asset.value

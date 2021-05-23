@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import formatDistance from "date-fns/formatDistance";
+import { formatDistance } from "date-fns";
 import dateFnsConfig from "../../helpers/dateFnsConfig";
 import { mapState } from "vuex";
 

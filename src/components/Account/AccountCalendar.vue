@@ -2,14 +2,13 @@
   <div class="account-calendar">
     <v-calendar
       ref="calendar"
-      v-model="value"
       color="primary"
       type="4day"
       :events="formattedEvents"
       :event-ripple="false"
       @change="getEvents"
       @mousedown:event="onMouseDownEvent"
-      @mousedown:time="addDate"
+      @mousedown:time="triggAddDate"
     >
       <template v-slot:event="{ event, timed, eventSummary }">
         <div class="v-event-draggable" v-html="eventSummary()"></div>
@@ -25,12 +24,15 @@
       no-button
       :displayDialog="dialog"
       @onSubmit="addDate($event)"
+      @onClose="dialog = false"
     />
   </div>
 </template>
 
 <script>
 import AccountPlay from "./AccountPlay";
+import { add, getTime } from "date-fns";
+
 export default {
   name: "AccountCalendar",
   props: {
@@ -42,7 +44,7 @@ export default {
   components: { AccountPlay },
   data: () => ({
     dialog: false,
-    value: "",
+    newDate: "",
     events: [],
     colors: [
       "#2196F3",
@@ -66,15 +68,18 @@ export default {
     dragEvent: null,
     dragStart: null,
     createEvent: null,
-    createStart: null,
     extendOriginal: null,
   }),
   computed: {
     formattedEvents() {
       return this.events?.map((event) => {
+        event.name = this.getEventName(event);
         event.color = this.getEventColor(event);
         return event;
       });
+    },
+    members() {
+      return this.account.members;
     },
   },
   methods: {
@@ -85,29 +90,22 @@ export default {
         this.extendOriginal = null;
       }
     },
-    addDate(tms) {
-      const mouse = this.toTime(tms);
-
-      if (this.dragEvent && this.dragTime === null) {
-        const start = this.dragEvent.start;
-
-        this.dragTime = mouse - start;
-      } else {
-        this.createStart = this.roundTime(mouse);
-        this.createEvent = {
-          name: `Event #${this.events.length}`,
-          start: this.createStart,
-          end: this.createStart,
-          timed: true,
-        };
-
-        this.events.push(this.createEvent);
-      }
+    triggAddDate(date) {
+      this.newDate = date;
+      this.dialog = true;
     },
-    extendBottom(event) {
-      this.createEvent = event;
-      this.createStart = event.start;
-      this.extendOriginal = event.end;
+    addDate(duration) {
+      const startTime = this.roundTime(this.toTime(this.newDate));
+      const endTime = getTime(add(new Date(startTime), { minutes: duration }));
+
+      this.createEvent = {
+        start: startTime,
+        end: endTime,
+        timed: true,
+      };
+
+      this.events.push(this.createEvent);
+      this.dialog = false;
     },
     roundTime(time, down = true) {
       const roundTo = 15; // minutes
@@ -127,13 +125,21 @@ export default {
       ).getTime();
     },
     getEventColor(event) {
-      const color = "#f321ef";
+      const color =
+        this.members.find((member) => member.uid === event.userUid)?.avatar
+          .circleColors.hex || this.$vuetify.theme.themes.dark.primary;
       const rgb = parseInt(color.substring(1), 16);
       const r = (rgb >> 16) & 0xff;
       const g = (rgb >> 8) & 0xff;
       const b = (rgb >> 0) & 0xff;
 
       return event === this.createEvent ? `rgba(${r}, ${g}, ${b}, 0.7)` : color;
+    },
+    getEventName(event) {
+      return (
+        this.members.find((member) => member.uid === event.userUid)?.name ||
+        "Inconnu"
+      );
     },
     getEvents({ start, end }) {
       const events = [];
@@ -151,7 +157,7 @@ export default {
         const end = start + secondTimestamp;
 
         events.push({
-          name: this.rndElement(this.names),
+          userUid: "jc3ldMVQGqSNi3WKFwvVNK2z6Gl1",
           start,
           end,
           timed,
