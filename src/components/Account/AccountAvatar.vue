@@ -1,6 +1,6 @@
 <template>
   <div :class="['account-avatar']">
-    <LiveIcon class="account-avatar__status" active />
+    <LiveIcon class="account-avatar__status" />
     <div class="account-avatar__avatar elevation-6">
       <transition name="fade">
         <avatar

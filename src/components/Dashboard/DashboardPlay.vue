@@ -86,13 +86,9 @@ export default {
     ],
   }),
   props: {
-    platformId: {
-      type: Number,
+    account: {
+      type: Object,
       required: true,
-    },
-    button: {
-      type: Boolean,
-      default: false,
     },
   },
   computed: {

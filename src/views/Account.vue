@@ -9,7 +9,7 @@
               class="account__play align-self-center ml-auto mt-6"
               v-if="editMode"
             >
-              <DashboardPlay :account="accountSaved" button />
+              <DashboardPlay :account="accountSaved" />
             </div>
           </div>
           <div v-if="!editMode && !createMode">
@@ -40,7 +40,7 @@
             class="account__play align-self-center ml-auto"
             v-if="!createMode && !editMode"
           >
-            <DashboardPlay :account="accountSaved" button />
+            <DashboardPlay :account="accountSaved" />
           </div>
         </v-card-subtitle>
         <v-divider />

@@ -33,7 +33,7 @@
         </v-list-item-content>
 
         <v-list-item-action>
-          <DashboardPlay :platform-id="1" />
+          <DashboardPlay :account="account" />
         </v-list-item-action>
       </v-list-item>
     </template>
