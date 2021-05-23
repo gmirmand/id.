@@ -9,7 +9,7 @@
               class="account__play align-self-center ml-auto mt-6"
               v-if="editMode"
             >
-              <DashboardPlay :account="accountSaved" />
+              <AccountPlay :account="accountSaved" />
             </div>
           </div>
           <div v-if="!editMode && !createMode">
@@ -40,7 +40,7 @@
             class="account__play align-self-center ml-auto"
             v-if="!createMode && !editMode"
           >
-            <DashboardPlay :account="accountSaved" />
+            <AccountPlay :account="accountSaved" />
           </div>
         </v-card-subtitle>
         <v-divider />
@@ -106,6 +106,10 @@
       <AccountMembers v-if="!createMode" :account="accountSaved" />
     </v-card>
 
+    <div class="account__calendar">
+      <AccountCalendar :account="accountSaved" />
+    </div>
+
     <div class="account__activity pa-3" v-if="false">
       <div class="text-subtitle-h3 text-center mb-3 mt-6">Activités</div>
       <v-divider />
@@ -155,20 +159,22 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import DashboardPlay from "@/components/Dashboard/DashboardPlay";
+import AccountPlay from "@/components/Account/AccountPlay";
 import AccountAvatar from "@/components/Account/AccountAvatar";
 import Loading from "@/components/Loading";
 import AccountMembers from "@/components/Account/AccountMembers";
 import UserAvatar from "@/components/Avatar/UserAvatar";
 import { i18nTranslateEn, i18nTranslateFr } from "../helpers/i18nTranslation";
+import AccountCalendar from "../components/Account/AccountCalendar";
 
 export default {
   components: {
+    AccountCalendar,
     UserAvatar,
     AccountMembers,
     Loading,
     AccountAvatar,
-    DashboardPlay,
+    AccountPlay,
   },
   data() {
     return {

@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
-    <template v-slot:activator="{ on, attrs }">
+    <template v-if="!noButton" v-slot:activator="{ on, attrs }">
       <v-btn class="mx-2" small fab color="primary" v-bind="attrs" v-on="on">
         <v-icon dark>mdi-play</v-icon>
       </v-btn>
@@ -46,9 +46,7 @@
         </v-slider>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="grey darken-1" text @click="dialog = false">
-          Annuler
-        </v-btn>
+        <v-btn color="grey darken-1" text @click="closeDialog"> Annuler </v-btn>
         <v-spacer />
         <v-btn x-large text @click="submit">
           <v-icon color="primary" x-large> mdi-play </v-icon>
@@ -64,7 +62,7 @@ import dateFnsConfig from "../../helpers/dateFnsConfig";
 import { mapState } from "vuex";
 
 export default {
-  name: "DashboardPlay",
+  name: "AccountPlay",
   data: () => ({
     dialog: false,
     timer: 30,
@@ -90,6 +88,24 @@ export default {
       type: Object,
       required: true,
     },
+    noButton: {
+      type: Boolean,
+      default: false,
+    },
+    displayDialog: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  mounted() {
+    if (this.displayDialog) {
+      this.dialog = this.displayDialog;
+    }
+  },
+  watch: {
+    displayDialog(val) {
+      this.dialog = val;
+    },
   },
   computed: {
     ...mapState("user", ["userProfile"]),
@@ -105,10 +121,21 @@ export default {
       this.timer = this.timer + this.interval;
     },
     submit() {
-      this.dialog = false;
-      console.log(
-        `submit ${this.timer} sur ${this.platformId} par ${this.userProfile}`
-      );
+      if (this.noButton) {
+        this.$emit("onSubmit", this.timer);
+      } else {
+        this.dialog = false;
+        console.log(
+          `submit ${this.timer} sur ${this.platformId} par ${this.userProfile}`
+        );
+      }
+    },
+    closeDialog() {
+      if (this.noButton) {
+        this.$emit("onClose");
+      } else {
+        this.dialog = false;
+      }
     },
   },
 };

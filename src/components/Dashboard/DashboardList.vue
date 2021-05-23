@@ -33,7 +33,7 @@
         </v-list-item-content>
 
         <v-list-item-action>
-          <DashboardPlay :account="account" />
+          <AccountPlay :account="account" />
         </v-list-item-action>
       </v-list-item>
     </template>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import DashboardPlay from "./DashboardPlay";
+import AccountPlay from "@/components/Account/AccountPlay";
 import LiveIcon from "../LiveIcon";
 import AccountAvatar from "../Account/AccountAvatar";
 import { mapState } from "vuex";
@@ -56,7 +56,7 @@ import { getFullUser } from "../../helpers/user";
 
 export default {
   name: "DashboardList",
-  components: { Loading, AccountAvatar, LiveIcon, DashboardPlay },
+  components: { Loading, AccountAvatar, LiveIcon, AccountPlay },
   computed: {
     ...mapState("platforms", ["platformsList"]),
   },
