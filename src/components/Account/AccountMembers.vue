@@ -18,7 +18,7 @@
         <template v-slot:prepend-inner>
           <v-chip class="mt-3 mb-2 ml-0 mr-3">
             <v-avatar left>
-              <UserAvatar :user="userProfile" xSmall />
+              <UserAvatar xSmall />
             </v-avatar>
             {{ userProfile.name }}
           </v-chip>
@@ -51,9 +51,14 @@
         </template>
       </v-autocomplete>
       <div v-else class="account-members__list d-flex flex-wrap">
-        <UserAvatar showName small showHighlight />
         <UserAvatar
-          v-for="user of usersList"
+          showName
+          small
+          isOwner
+          :user="isOwnAccount ? userProfile : account.owner"
+        />
+        <UserAvatar
+          v-for="user of members"
           :user="user"
           :key="user.uid"
           showName
@@ -122,6 +127,9 @@ export default {
           ? this.members.map((member) => member.uid).indexOf(item.uid) !== -1
           : false
       );
+    },
+    isOwnAccount() {
+      return this.userProfile.uid === this.account.owner.uid;
     },
   },
 };

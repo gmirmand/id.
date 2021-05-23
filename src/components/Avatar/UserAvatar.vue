@@ -46,7 +46,7 @@
         {{ computedUser.name }}
       </span>
       <span
-        v-if="computedUser === userProfile && showHighlight"
+        v-if="isOwner"
         class="user-avatar__owner text-caption text-center yellow--text"
       >
         Propriétaire
@@ -69,7 +69,7 @@ export default {
       type: Object,
       default: undefined,
     },
-    showHighlight: {
+    isOwner: {
       type: Boolean,
       default: false,
     },
