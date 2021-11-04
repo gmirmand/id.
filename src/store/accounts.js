@@ -88,6 +88,29 @@ const accounts = {
         });
       commit("setAccountsLoading", false);
     },
+    async deleteAccount({ dispatch, commit }, account) {
+      commit("setAccountsLoading", true);
+
+      const doc = fb.accountsCollection.doc(account.id);
+
+      doc
+        .delete()
+        .then(() => {
+          router.push({ name: "Dashboard" });
+
+          dispatch(
+            "alerts/pushSuccessAlert",
+            {
+              message: "Compte supprimé avec succès",
+            },
+            { root: true }
+          );
+        })
+        .catch((err) => {
+          sendError(err);
+        });
+      commit("setAccountsLoading", false);
+    },
   },
   getters: {
     allAccounts: (state) => {
