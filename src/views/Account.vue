@@ -2,7 +2,7 @@
   <section v-if="loaded" class="account">
     <AccountInfos :accountSaved="accountSaved" :userProfile="userProfile" />
 
-    <div class="account__calendar">
+    <div v-if="!createMode" class="account__calendar">
       <AccountCalendar :account="accountSaved" />
     </div>
 
@@ -78,9 +78,10 @@ export default {
   },
   computed: {
     ...mapState("user", ["userProfile"]),
-    ...mapState("platforms", ["platformsList"]),
     ...mapGetters("accounts", ["account"]),
-    ...mapGetters("user", ["userReference"]),
+    createMode() {
+      return this.$route.name === "AddAccount";
+    },
     accountSaved() {
       return this.account(this.$route.params.id);
     },

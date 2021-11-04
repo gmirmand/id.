@@ -120,6 +120,7 @@ import AccountMembers from "./AccountMembers";
 import AccountAvatar from "./AccountAvatar";
 import AccountPlay from "./AccountPlay";
 import AccountInfosDelete from "@/components/Account/AccountInfos/AccountInfosDelete";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "AccountInfos",
@@ -139,6 +140,8 @@ export default {
     };
   },
   computed: {
+    ...mapState("platforms", ["platformsList"]),
+    ...mapGetters("user", ["userReference"]),
     platformsMap() {
       return this.platformsList?.map((platform) => platform.name);
     },
@@ -170,7 +173,7 @@ export default {
   props: {
     accountSaved: {
       type: Object,
-      required: true,
+      default: undefined,
     },
     userProfile: {
       type: Object,
