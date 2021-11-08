@@ -2,9 +2,9 @@ import Vue from "vue";
 import Vuex from "vuex";
 import * as fb from "../firebase";
 import router from "../router/index";
-import { sendError } from "../helpers/errors";
-import { usersCollection } from "../firebase";
-import { getAccountsSubProperty } from "../helpers/accounts";
+import { sendError } from "@/helpers/errors";
+import { usersCollection } from "@/firebase";
+import { getAccountsSubProperty } from "@/helpers/accounts";
 
 Vue.use(Vuex);
 
@@ -46,26 +46,6 @@ const accounts = {
 
       commit("setAccountsLoading", false);
     },
-    async updateAccount({ dispatch, commit }, account) {
-      commit("setAccountsLoading", true);
-
-      const doc = fb.accountsCollection.doc(account.id);
-      await doc
-        .update(account)
-        .then(() => {
-          dispatch(
-            "alerts/pushSuccessAlert",
-            {
-              message: "Compte mis à jour avec succès ! Bien joué bg",
-            },
-            { root: true }
-          );
-        })
-        .catch((err) => {
-          sendError(err);
-        });
-      commit("setAccountsLoading", false);
-    },
     async createAccount({ dispatch, commit }, account) {
       commit("setAccountsLoading", true);
 
@@ -79,6 +59,26 @@ const accounts = {
             "alerts/pushSuccessAlert",
             {
               message: "Compte créé avec succès ! Bien joué bg",
+            },
+            { root: true }
+          );
+        })
+        .catch((err) => {
+          sendError(err);
+        });
+      commit("setAccountsLoading", false);
+    },
+    async updateAccount({ dispatch, commit }, account) {
+      commit("setAccountsLoading", true);
+
+      const doc = fb.accountsCollection.doc(account.id);
+      await doc
+        .update(account)
+        .then(() => {
+          dispatch(
+            "alerts/pushSuccessAlert",
+            {
+              message: "Compte mis à jour avec succès ! Bien joué bg",
             },
             { root: true }
           );

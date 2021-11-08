@@ -46,26 +46,6 @@ export default {
   data: () => ({
     dialog: false,
     newDate: "",
-    events: [],
-    colors: [
-      "#2196F3",
-      "#3F51B5",
-      "#673AB7",
-      "#00BCD4",
-      "#4CAF50",
-      "#FF9800",
-      "#757575",
-    ],
-    names: [
-      "Meeting",
-      "Holiday",
-      "PTO",
-      "Travel",
-      "Event",
-      "Birthday",
-      "Conference",
-      "Party",
-    ],
     dragEvent: null,
     dragStart: null,
     createEvent: null,
@@ -74,7 +54,7 @@ export default {
   computed: {
     ...mapState("user", ["userProfile"]),
     formattedEvents() {
-      return this.events?.map((event) => {
+      return this.account.events?.map((event) => {
         event.name = this.getEventName(event);
         event.color = this.getEventColor(event);
         return event;
@@ -106,7 +86,13 @@ export default {
         timed: true,
       };
 
-      this.events.push(this.createEvent);
+      const eventList = this.account.events || [];
+
+      this.$store.dispatch("accounts/updateAccount", {
+        id: this.account.id,
+        events: eventList.concat(this.createEvent),
+      });
+
       this.dialog = false;
     },
     roundTime(time, down = true) {
@@ -129,7 +115,7 @@ export default {
     getEventColor(event) {
       const color =
         this.members.find((member) => member.uid === event.userUid)?.avatar
-          .circleColors.hex || this.userProfile.avatar.circleColors.hex;
+          .circleColors.hex || this.account.owner.avatar.circleColors.hex;
       const rgb = parseInt(color.substring(1), 16);
       const r = (rgb >> 16) & 0xff;
       const g = (rgb >> 8) & 0xff;
@@ -139,40 +125,16 @@ export default {
     },
     getEventName(event) {
       return (
-        this.members.find((member) => member.uid === event.userUid)?.name ||
-        this.userProfile.name
+        this.members.find((member) => {
+          console.log(member.uid);
+          console.log(event.userUid);
+          return member.uid === event.userUid;
+        })?.name || this.account.owner.name
       );
     },
     getEvents({ start, end }) {
-      const events = [];
-
-      const min = new Date(`${start.date}T00:00:00`).getTime();
-      const max = new Date(`${end.date}T23:59:59`).getTime();
-      const days = (max - min) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-
-      for (let i = 0; i < eventCount; i++) {
-        const timed = this.rnd(0, 3) !== 0;
-        const firstTimestamp = this.rnd(min, max);
-        const secondTimestamp = this.rnd(2, timed ? 8 : 288) * 900000;
-        const start = firstTimestamp - (firstTimestamp % 900000);
-        const end = start + secondTimestamp;
-
-        events.push({
-          userUid: "jc3ldMVQGqSNi3WKFwvVNK2z6Gl1",
-          start,
-          end,
-          timed,
-        });
-      }
-
-      this.events = events;
-    },
-    rnd(a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a;
-    },
-    rndElement(arr) {
-      return arr[this.rnd(0, arr.length - 1)];
+      console.log(start);
+      console.log(end);
     },
   },
 };
