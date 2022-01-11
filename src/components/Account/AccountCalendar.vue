@@ -6,19 +6,36 @@
       type="4day"
       :events="formattedEvents"
       :event-ripple="false"
-      @change="getEvents"
-      @mousedown:event="onMouseDownEvent"
-      @mousedown:time="triggAddDate"
+      @click:time="triggAddDate"
+      @click:event="showEvent"
     >
       <template v-slot:event="{ event, timed, eventSummary }">
         <div class="v-event-draggable" v-html="eventSummary()"></div>
-        <div
-          v-if="timed"
-          class="v-event-drag-bottom"
-          @mousedown.stop="extendBottom(event)"
-        ></div>
+        <div v-if="timed" class="v-event-drag-bottom"></div>
       </template>
     </v-calendar>
+    <v-menu
+      v-if="selectedEvent"
+      v-model="selectedOpen"
+      :close-on-content-click="false"
+      :activator="selectedElement"
+      offset-x
+    >
+      <v-card color="grey lighten-4" min-width="350px" flat>
+        <v-toolbar :color="selectedEvent.color" dark>
+          <v-toolbar-title v-html="'Supprimer ce crénau ?'"></v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="deleteEvent(selectedEvent)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-actions>
+          <v-btn text color="secondary" @click="selectedOpen = false">
+            Annuler
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
     <AccountPlay
       :account="account"
       no-button
@@ -46,10 +63,11 @@ export default {
   data: () => ({
     dialog: false,
     newDate: "",
-    dragEvent: null,
     dragStart: null,
     createEvent: null,
-    extendOriginal: null,
+    selectedOpen: false,
+    selectedElement: null,
+    selectedEvent: {},
   }),
   computed: {
     ...mapState("user", ["userProfile"]),
@@ -65,13 +83,6 @@ export default {
     },
   },
   methods: {
-    onMouseDownEvent({ event, timed }) {
-      if (event && timed) {
-        this.dragEvent = event;
-        this.dragTime = null;
-        this.extendOriginal = null;
-      }
-    },
     triggAddDate(date) {
       this.newDate = date;
       this.dialog = true;
@@ -126,15 +137,29 @@ export default {
     getEventName(event) {
       return (
         this.members.find((member) => {
-          console.log(member.uid);
-          console.log(event.userUid);
           return member.uid === event.userUid;
         })?.name || this.account.owner.name
       );
     },
-    getEvents({ start, end }) {
-      console.log(start);
-      console.log(end);
+    showEvent({ nativeEvent, event }) {
+      if (this.selectedOpen || event.userUid !== this.userProfile.uid) {
+        this.selectedEvent = this.selectedElement = null;
+        this.selectedOpen = false;
+      } else {
+        this.selectedEvent = event;
+        this.selectedElement = nativeEvent.target;
+        this.selectedOpen = true;
+      }
+
+      nativeEvent.stopPropagation();
+    },
+    deleteEvent(eventToDelete) {
+      let eventList = this.account.events || [];
+
+      this.$store.dispatch("accounts/updateAccount", {
+        id: this.account.id,
+        events: eventList.filter((event) => event !== eventToDelete),
+      });
     },
   },
 };
