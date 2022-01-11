@@ -50,6 +50,7 @@
 import AccountPlay from "./AccountPlay";
 import { add, getTime } from "date-fns";
 import { mapState } from "vuex";
+import { roundTime, toTime } from "@/helpers/tools";
 
 export default {
   name: "AccountCalendar",
@@ -88,7 +89,7 @@ export default {
       this.dialog = true;
     },
     addDate(duration) {
-      const startTime = this.roundTime(this.toTime(this.newDate));
+      const startTime = roundTime(toTime(this.newDate));
       const endTime = getTime(add(new Date(startTime), { minutes: duration }));
       this.createEvent = {
         userUid: this.userProfile.uid,
@@ -105,23 +106,6 @@ export default {
       });
 
       this.dialog = false;
-    },
-    roundTime(time, down = true) {
-      const roundTo = 15; // minutes
-      const roundDownTime = roundTo * 60 * 1000;
-
-      return down
-        ? time - (time % roundDownTime)
-        : time + (roundDownTime - (time % roundDownTime));
-    },
-    toTime(tms) {
-      return new Date(
-        tms.year,
-        tms.month - 1,
-        tms.day,
-        tms.hour,
-        tms.minute
-      ).getTime();
     },
     getEventColor(event) {
       const color =

@@ -60,6 +60,7 @@
 import { formatDistance } from "date-fns";
 import dateFnsConfig from "../../helpers/dateFnsConfig";
 import { mapState } from "vuex";
+import { roundTime } from "@/helpers/tools";
 
 export default {
   name: "AccountPlay",
