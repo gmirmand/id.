@@ -26,11 +26,11 @@
           color="primary"
         >
           <template v-slot:prepend>
-            <v-icon @click="decrement" color="primary"> mdi-minus </v-icon>
+            <v-icon @click="decrement" color="primary"> mdi-minus</v-icon>
           </template>
 
           <template v-slot:append>
-            <v-icon @click="increment" color="primary"> mdi-plus </v-icon>
+            <v-icon @click="increment" color="primary"> mdi-plus</v-icon>
           </template>
 
           <template v-slot:thumb-label="{ value }">
@@ -46,10 +46,10 @@
         </v-slider>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="grey darken-1" text @click="closeDialog"> Annuler </v-btn>
+        <v-btn color="grey darken-1" text @click="closeDialog"> Annuler</v-btn>
         <v-spacer />
         <v-btn x-large text @click="submit">
-          <v-icon color="primary" x-large> mdi-play </v-icon>
+          <v-icon color="primary" x-large> mdi-play</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { formatDistance } from "date-fns";
+import { add, formatDistance, getTime } from "date-fns";
 import dateFnsConfig from "../../helpers/dateFnsConfig";
 import { mapState } from "vuex";
 import { roundTime } from "@/helpers/tools";
@@ -125,10 +125,26 @@ export default {
       if (this.noButton) {
         this.$emit("onSubmit", this.timer);
       } else {
-        this.dialog = false;
-        console.log(
-          `submit ${this.timer} sur ${this.platformId} par ${this.userProfile}`
+        const startTime = roundTime(new Date());
+        const endTime = getTime(
+          add(new Date(startTime), { minutes: this.timer })
         );
+
+        const createEvent = {
+          userUid: this.userProfile.uid,
+          start: startTime,
+          end: endTime,
+          timed: true,
+        };
+
+        const eventList = this.account.events || [];
+
+        this.$store.dispatch("accounts/updateAccount", {
+          id: this.account.id,
+          events: eventList.concat(createEvent),
+        });
+
+        this.dialog = false;
       }
     },
     closeDialog() {

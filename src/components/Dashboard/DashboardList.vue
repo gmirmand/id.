@@ -7,29 +7,37 @@
     <template v-if="accounts.length && accounts.length > 0">
       <v-list-item
         v-for="account of accounts"
-        :to="{ name: 'Account', params: { id: account.id } }"
-        link
         :key="account.id"
         class="dashboard-list__item"
       >
         <v-list-item-avatar class="mr-5 ml-1 overflow-visible">
-          <AccountAvatar :account="account" />
+          <router-link
+            :to="{ name: 'Account', params: { id: account.id } }"
+            class="text-decoration-none"
+          >
+            <AccountAvatar :account="account" />
+          </router-link>
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title v-text="account.name"></v-list-item-title>
-          <v-list-item-subtitle
-            v-if="account.owner || personal"
-            v-text="
-              personal
-                ? account.members && account.members.length > 0
-                  ? `Partagé avec ${account.members.length} personne${
-                      account.members.length > 1 ? 's' : ''
-                    }`
-                  : 'Non partagé'
-                : getFullUser(account.owner)
-            "
-          ></v-list-item-subtitle>
+          <router-link
+            :to="{ name: 'Account', params: { id: account.id } }"
+            class="text-decoration-none"
+          >
+            <v-list-item-title v-text="account.name"></v-list-item-title>
+            <v-list-item-subtitle
+              v-if="account.owner || personal"
+              v-text="
+                personal
+                  ? account.members && account.members.length > 0
+                    ? `Partagé avec ${account.members.length} personne${
+                        account.members.length > 1 ? 's' : ''
+                      }`
+                    : 'Non partagé'
+                  : getFullUser(account.owner)
+              "
+            ></v-list-item-subtitle>
+          </router-link>
         </v-list-item-content>
 
         <v-list-item-action>
