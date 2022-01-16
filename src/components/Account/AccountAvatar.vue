@@ -1,6 +1,6 @@
 <template>
   <div :class="['account-avatar']">
-    <LiveIcon class="account-avatar__status" />
+    <LiveIcon :active="active" class="account-avatar__status" />
     <div class="account-avatar__avatar elevation-6">
       <transition name="fade">
         <avatar
@@ -18,6 +18,7 @@
 import LiveIcon from "../LiveIcon";
 import Avatar from "vue-avatar-component";
 import { storagePlatformsLogos } from "../../firebase";
+import { isBefore } from "date-fns";
 
 export default {
   name: "AccountAvatar",
@@ -35,6 +36,18 @@ export default {
   },
   mounted() {
     this.getLogo();
+  },
+  computed: {
+    active() {
+      const now = new Date();
+      const isActive = (event) => {
+        return (
+          isBefore(new Date(event.start), now) &&
+          isBefore(now, new Date(event.end))
+        );
+      };
+      return this.account?.events?.some(isActive);
+    },
   },
   watch: {
     account() {
