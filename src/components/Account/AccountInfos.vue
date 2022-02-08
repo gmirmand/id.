@@ -3,7 +3,7 @@
     <v-form name="accountForm" @submit.prevent="updatePlatformInfos">
       <v-card-subtitle class="d-flex">
         <div class="mr-3 d-flex flex-column align-center">
-          <AccountAvatar :account="accountSaved" />
+          <AccountAvatar :account="accountSaved || accountNotSaved" />
           <div
             class="account__play align-self-center ml-auto mt-6"
             v-if="editMode"
