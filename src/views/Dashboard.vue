@@ -1,5 +1,7 @@
 <template>
   <section class="dashboard">
+    <NotificationAuthorization />
+
     <DashboardList personal class="mb-6" :accounts="personalAccountsList" />
 
     <div class="d-flex justify-center mt-2 mb-6">
@@ -13,11 +15,12 @@
 </template>
 
 <script>
-import DashboardList from "../components/Dashboard/DashboardList";
+import DashboardList from "@/components/Dashboard/DashboardList";
+import NotificationAuthorization from "@/components/NotificationAuthorization";
 import { mapState } from "vuex";
 
 export default {
-  components: { DashboardList },
+  components: { NotificationAuthorization, DashboardList },
   computed: {
     ...mapState("accounts", ["personalAccountsList", "sharedAccountsList"]),
   },
