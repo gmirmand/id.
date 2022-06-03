@@ -190,7 +190,7 @@ export default {
       const account = this.accountSaved || {};
       account.owner = this.userReference;
       account.name = this.accountNotSaved.name;
-      account.description = this.accountDescription;
+      account.description = this.accountDescription || "";
       account.login = this.accountLogin;
       account.pwuid = subLogin;
 

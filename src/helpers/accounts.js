@@ -18,18 +18,20 @@ export const getAccountsSubProperty = (query) => {
     // Get members objects
     const membersPromise = [];
     accountDoc.members?.forEach((member) => {
-      membersPromise.push(
-        new Promise((resolve) => {
-          member
-            .get()
-            .then((docMember) => {
-              resolve(docMember.data());
-            })
-            .catch((err) => {
-              sendError(err);
-            });
-        })
-      );
+      if (member.get) {
+        membersPromise.push(
+          new Promise((resolve) => {
+            member
+              .get()
+              .then((docMember) => {
+                resolve(docMember.data());
+              })
+              .catch((err) => {
+                sendError(err);
+              });
+          })
+        );
+      }
     });
 
     Promise.all(membersPromise)

@@ -14,6 +14,7 @@
       <v-avatar class="user-avatar__avatar-wrapper mb-1">
         <LiveIcon v-if="live" active class="user-avatar__live" />
         <Avataaars
+          v-if="computedUser.avatar"
           class="user-avatar__avatar"
           :accessoriesType="computedUser.avatar.accessoriesTypes"
           :circleColor="computedUser.avatar.circleColors.hex"
