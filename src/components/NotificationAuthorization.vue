@@ -11,8 +11,9 @@
     }}
   </v-btn>
 </template>
-
 <script>
+import { sendNotification } from "@/helpers/notification";
+
 export default {
   name: "NotificationAuthorization",
   data() {
@@ -31,10 +32,21 @@ export default {
   methods: {
     authorize() {
       // Let's check whether notification permissions have already been granted
-      if (Notification.permission === "granted") {
+      if (
+        Notification.permission === "granted" &&
+        !localStorage.getItem("notificationGranded")
+      ) {
         // If it's okay let's create a notification
         this.isAllowed = true;
-        new Notification("Hi there!");
+
+        sendNotification(
+          "COUCOU",
+          "C'est super top d'avoir activé les notifs ! Je vais pouvoir te spam (blague). (en vrai je rigole ça marche pas encore lol)",
+          {
+            image: "https://i.imgflip.com/1hx5mc.jpg",
+          }
+        );
+        localStorage.setItem("notificationGranded", true);
       }
 
       // Otherwise, we need to ask the user for permission
@@ -43,7 +55,6 @@ export default {
           // If the user accepts, let's create a notification
           if (permission === "granted") {
             this.isAllowed = true;
-            new Notification("Hi there!");
           } else {
             this.isAllowed = false;
           }
