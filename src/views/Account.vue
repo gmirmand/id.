@@ -60,8 +60,8 @@ import AccountAvatar from "@/components/Account/AccountAvatar";
 import Loading from "@/components/Loading";
 import AccountMembers from "@/components/Account/AccountMembers";
 import UserAvatar from "@/components/Avatar/UserAvatar";
-import AccountCalendar from "../components/Account/AccountCalendar";
-import AccountInfos from "../components/Account/AccountInfos";
+import AccountCalendar from "@/components/Account/AccountCalendar";
+import AccountInfos from "@/components/Account/AccountInfos";
 
 export default {
   components: {
@@ -88,9 +88,6 @@ export default {
     loaded() {
       return this.userProfile && (this.accountSaved || this.createMode);
     },
-  },
-  methods: {
-    //
   },
 };
 </script>
